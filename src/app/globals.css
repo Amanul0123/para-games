@@ -2,25 +2,57 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #333333;
+
+  --brand-red: #e03a18;
+  --brand-cyan: #00bcd4;
+  --progress-green: #4caf50;
+  --text-dark: #333333;
+  --border-gray: #cccccc;
+  --bg-white: #ffffff;
+  --footer-black: #1a1a1a;
+  --link-teal: #00acc1;
+  --success-green-bg: #f0fff0;
+  --success-green-border: #c3e6cb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-inter);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-red: var(--brand-red);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-progress-green: var(--progress-green);
+  --color-text-dark: var(--text-dark);
+  --color-border-gray: var(--border-gray);
+  --color-bg-white: var(--bg-white);
+  --color-footer-black: var(--footer-black);
+  --color-link-teal: var(--link-teal);
+  --color-success-green-bg: var(--success-green-bg);
+  --color-success-green-border: var(--success-green-border);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.PhoneInput {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-gray);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.PhoneInputInput {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.PhoneInputCountry {
+  margin-right: 0.5rem;
 }

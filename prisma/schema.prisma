@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Report {
+  id           String    @id @default(uuid())
+  npc          String
+  reportedBy   String
+  dateOfReport DateTime  @db.Date
+  email        String
+  phone        String
+  status       String    @default("submitted")
+  createdAt    DateTime  @default(now())
+  injuries     Injury[]
+  illnesses    Illness[]
+}
+
+model Injury {
+  id              String  @id @default(uuid())
+  reportId        String
+  report          Report  @relation(fields: [reportId], references: [id])
+  accreditationNo String
+  sportEvent      String
+  roundHeat       String?
+  injuryDate      String
+  injuryTime      String?
+  bodyPart        String
+  bodyPartCode    String?
+  injuryType      String
+  injuryTypeCode  String?
+  causeOfInjury   String?
+  causeCode       String?
+  absenceDays     Int?
+}
+
+model Illness {
+  id              String  @id @default(uuid())
+  reportId        String
+  report          Report  @relation(fields: [reportId], references: [id])
+  accreditationNo String
+  sportEvent      String
+  occurredOn      String
+  diagnosis       String
+  affectedSystem  String?
+  systemCode      String?
+  mainSymptoms    String?
+  symptomCodes    String?
+  causeOfIllness  String?
+  causeCode       String?
+  absenceDays     Int?
+}
+
+model AdminUser {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}

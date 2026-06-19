@@ -2,5 +2,8 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  NEXTAUTH_URL = "https://flourishing-truffle-0e4f54.netlify.app"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"

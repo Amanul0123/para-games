@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ReportDetail from "@/components/admin/ReportDetail";
+import DeleteReportButton from "@/components/admin/DeleteReportButton";
 import { ReportDetail as ReportDetailType } from "@/types";
 
 export default async function AdminReportDetailPage({
@@ -60,12 +61,15 @@ export default async function AdminReportDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      <Link
-        href="/admin/dashboard"
-        className="mb-4 inline-block text-sm text-link-teal hover:underline"
-      >
-        &larr; Back to Dashboard
-      </Link>
+      <div className="mb-4 flex items-center justify-between">
+        <Link
+          href="/admin/dashboard"
+          className="text-sm text-link-teal hover:underline"
+        >
+          &larr; Back to Dashboard
+        </Link>
+        <DeleteReportButton id={report.id} />
+      </div>
       <h1 className="mb-6 text-xl font-bold text-text-dark">Report Detail</h1>
       <ReportDetail report={data} />
     </div>

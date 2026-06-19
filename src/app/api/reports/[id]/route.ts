@@ -25,3 +25,21 @@ export async function GET(
 
   return NextResponse.json(report);
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  await prisma.injury.deleteMany({ where: { reportId: id } });
+  await prisma.illness.deleteMany({ where: { reportId: id } });
+  await prisma.report.delete({ where: { id } });
+
+  return NextResponse.json({ success: true });
+}

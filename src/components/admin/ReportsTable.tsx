@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ReportSummary } from "@/types";
 
 interface ReportsTableProps {
@@ -6,6 +10,24 @@ interface ReportsTableProps {
 }
 
 export default function ReportsTable({ reports }: ReportsTableProps) {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this report? This cannot be undone.")) return;
+
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/reports/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete report");
+      router.refresh();
+    } catch {
+      alert("Failed to delete report. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="overflow-x-auto rounded-md border border-border-gray">
       <table className="w-full text-sm">
@@ -36,12 +58,22 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
               <td className="px-4 py-3">{report.injuryCount}</td>
               <td className="px-4 py-3">{report.illnessCount}</td>
               <td className="px-4 py-3">
-                <Link
-                  href={`/admin/report/${report.id}`}
-                  className="rounded-md bg-brand-cyan px-3 py-1 text-white hover:opacity-90"
-                >
-                  View
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/report/${report.id}`}
+                    className="rounded-md bg-brand-cyan px-3 py-1 text-white hover:opacity-90"
+                  >
+                    View
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(report.id)}
+                    disabled={deletingId === report.id}
+                    className="rounded-md bg-red-600 px-3 py-1 text-white hover:opacity-90 disabled:opacity-50"
+                  >
+                    {deletingId === report.id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

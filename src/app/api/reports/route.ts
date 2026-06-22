@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { reportSubmitSchema } from "@/lib/validations";
+import { signReportLink } from "@/lib/magicLink";
+import { sendEmail, buildMagicLinkEmail } from "@/lib/mailer";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -57,6 +59,11 @@ export async function POST(request: NextRequest) {
       },
     },
   });
+
+  const token = signReportLink(report.id, report.email);
+  const link = `${process.env.NEXTAUTH_URL}/form/manage/verify?token=${token}`;
+  const { subject, html } = buildMagicLinkEmail(link, report.npc);
+  void sendEmail({ to: report.email, subject, html });
 
   return NextResponse.json({ success: true, id: report.id });
 }

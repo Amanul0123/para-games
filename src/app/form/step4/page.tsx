@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ProgressBar from "@/components/ProgressBar";
 import { useFormContext } from "@/context/FormContext";
 import { getNpcFlag } from "@/lib/npcFlags";
+import { addMyReport } from "@/lib/myReports";
 
 export default function Step4Page() {
   const router = useRouter();
@@ -33,6 +34,13 @@ export default function Step4Page() {
       }
 
       const { id } = await res.json();
+      addMyReport({
+        id,
+        email: formData.step1.email,
+        npc: formData.step1.npc,
+        reportedBy: formData.step1.reportedBy,
+        createdAt: new Date().toISOString(),
+      });
       resetForm();
       router.push(`/form/success?id=${id}`);
     } catch (err) {

@@ -32,7 +32,7 @@ export default function Header() {
           alt="Asian Paralympic Committee - 5th Asian Para Games Aichi-Nagoya 2026"
           width={360}
           height={160}
-          className="h-auto w-64 object-contain sm:w-80"
+          className="h-auto w-64 object-contain sm:w-80 animate-logo-rise"
           priority
         />
       </div>

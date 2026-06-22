@@ -1,0 +1,360 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.navbar{background:#1a1a2e;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:2px solid #E03A18}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:32px;height:32px;background:#E03A18;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-title{color:#fff;font-size:14px;font-weight:500;line-height:1.3}
+.nav-title span{color:#E03A18;font-size:11px;display:block;font-weight:400}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{color:rgba(255,255,255,0.55);font-size:13px;padding:6px 12px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.nav-link:hover{background:rgba(255,255,255,0.08);color:#fff}
+.nav-link.active{background:#E03A18;color:#fff}
+.nav-link i{font-size:15px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-badge{background:rgba(224,58,24,0.18);color:#E03A18;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.nav-avatar{width:32px;height:32px;background:#E03A18;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:500;cursor:pointer}
+.logout-btn{color:rgba(255,255,255,0.55);font-size:13px;padding:6px 12px;border:0.5px solid rgba(255,255,255,0.15);border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.logout-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+
+.page{padding:24px;background:var(--color-background-tertiary);min-height:calc(100vh - 56px)}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.page-subtitle{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
+.header-actions{display:flex;gap:8px}
+.btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-primary);background:var(--color-background-primary);cursor:pointer}
+.btn-export:hover{background:var(--color-background-secondary)}
+.btn-export i{font-size:15px;color:var(--color-text-secondary)}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;display:flex;align-items:flex-start;gap:12px}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon i{font-size:20px}
+.stat-icon.red{background:#FAECE7}
+.stat-icon.red i{color:#D85A30}
+.stat-icon.blue{background:#E6F1FB}
+.stat-icon.blue i{color:#185FA5}
+.stat-icon.amber{background:#FAEEDA}
+.stat-icon.amber i{color:#BA7517}
+.stat-icon.green{background:#EAF3DE}
+.stat-icon.green i{color:#3B6D11}
+.stat-value{font-size:24px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.stat-label{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+.stat-delta{font-size:11px;margin-top:6px;display:flex;align-items:center;gap:3px}
+.delta-up{color:#3B6D11}
+.delta-down{color:#A32D2D}
+
+.main-grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-header{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.card-title i{font-size:16px;color:var(--color-text-secondary)}
+.card-action{font-size:12px;color:#185FA5;cursor:pointer}
+
+.filter-bar{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;background:var(--color-background-secondary)}
+.filter-bar input{flex:1;font-size:13px;padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.filter-select{font-size:13px;padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.filter-btn{font-size:13px;padding:6px 12px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;display:flex;align-items:center;gap:4px}
+
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead th{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+tbody tr{border-bottom:0.5px solid var(--color-border-tertiary);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:var(--color-background-secondary)}
+tbody tr:last-child{border-bottom:none}
+td{padding:11px 16px;font-size:13px;color:var(--color-text-primary);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-num{width:40px;color:var(--color-text-secondary);font-size:12px}
+.td-npc{width:110px}
+.td-name{width:120px}
+.td-date{width:90px}
+.td-email{width:140px}
+.td-badge{width:80px}
+.td-badge2{width:80px}
+.td-status{width:80px}
+.td-actions{width:100px}
+
+.npc-pill{display:inline-flex;align-items:center;gap:5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 8px;font-size:12px}
+.npc-dot{width:8px;height:8px;border-radius:50%;background:#E03A18;flex-shrink:0}
+
+.count-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:3px 8px;border-radius:20px}
+.inj-badge{background:#FAECE7;color:#993C1D}
+.ill-badge{background:#FAEEDA;color:#854F0B}
+.zero-badge{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.dot{width:6px;height:6px;border-radius:50%}
+.dot-new{background:#639922}
+.dot-review{background:#BA7517}
+
+.action-btns{display:flex;gap:6px}
+.btn-view{font-size:12px;padding:4px 10px;border-radius:6px;background:#185FA5;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-view i{font-size:13px}
+.btn-del{font-size:12px;padding:4px 8px;border-radius:6px;background:transparent;color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary);cursor:pointer}
+.btn-del i{font-size:13px}
+.btn-del:hover{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
+
+.side-panel{display:flex;flex-direction:column;gap:16px}
+
+.mini-chart-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.chart-wrap{padding:12px 16px}
+
+.body-heatmap{padding:12px 16px}
+.body-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.body-zone{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;background:var(--color-background-secondary);font-size:12px;color:var(--color-text-secondary)}
+.zone-bar{height:4px;border-radius:2px;flex:1;background:var(--color-border-tertiary)}
+.zone-fill{height:4px;border-radius:2px}
+.zone-count{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:16px;text-align:right}
+
+.recent-npc{padding:12px 16px}
+.npc-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.npc-row:last-child{border-bottom:none}
+.npc-name{font-size:13px;color:var(--color-text-primary)}
+.npc-count{font-size:12px;color:var(--color-text-secondary)}
+.npc-bar-wrap{flex:1;margin:0 10px;height:4px;background:var(--color-background-secondary);border-radius:2px}
+.npc-bar-fill{height:4px;border-radius:2px;background:#E03A18}
+</style>
+
+<div class="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo"><i class="ti ti-wheelchair" style="color:#fff;font-size:16px" aria-hidden="true"></i></div>
+    <div class="nav-title">APC Medical Portal <span>Aichi Nagoya 2026</span></div>
+  </div>
+  <div class="nav-links">
+    <div class="nav-link active"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+    <div class="nav-link"><i class="ti ti-file-report" aria-hidden="true"></i> Reports</div>
+    <div class="nav-link"><i class="ti ti-users" aria-hidden="true"></i> Athletes</div>
+    <div class="nav-link"><i class="ti ti-chart-bar" aria-hidden="true"></i> Analytics</div>
+    <div class="nav-link"><i class="ti ti-settings" aria-hidden="true"></i> Settings</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-badge"><i class="ti ti-bell" style="font-size:11px" aria-hidden="true"></i> 3 new</div>
+    <div class="nav-avatar">AD</div>
+    <div class="logout-btn"><i class="ti ti-logout" aria-hidden="true"></i> Logout</div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Medical Reports Dashboard</div>
+      <div class="page-subtitle">Aichi Nagoya 2026 Asian Para Games — Injury & Illness Surveillance</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-export"><i class="ti ti-file-spreadsheet" aria-hidden="true"></i> Export CSV</button>
+      <button class="btn-export"><i class="ti ti-printer" aria-hidden="true"></i> Print</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="ti ti-file-report" aria-hidden="true"></i></div>
+      <div>
+        <div class="stat-value">24</div>
+        <div class="stat-label">Total Submissions</div>
+        <div class="stat-delta delta-up"><i class="ti ti-arrow-up-right" style="font-size:11px" aria-hidden="true"></i> 6 this week</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="ti ti-run" aria-hidden="true"></i></div>
+      <div>
+        <div class="stat-value">41</div>
+        <div class="stat-label">Total Injuries</div>
+        <div class="stat-delta delta-down"><i class="ti ti-arrow-down-right" style="font-size:11px" aria-hidden="true"></i> down vs yesterday</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="ti ti-virus" aria-hidden="true"></i></div>
+      <div>
+        <div class="stat-value">18</div>
+        <div class="stat-label">Total Illnesses</div>
+        <div class="stat-delta delta-up"><i class="ti ti-arrow-up-right" style="font-size:11px" aria-hidden="true"></i> 3 new today</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="ti ti-flag" aria-hidden="true"></i></div>
+      <div>
+        <div class="stat-value">14</div>
+        <div class="stat-label">NPCs Reporting</div>
+        <div class="stat-delta delta-up"><i class="ti ti-arrow-up-right" style="font-size:11px" aria-hidden="true"></i> of 44 total</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="ti ti-table" aria-hidden="true"></i> All Submissions</div>
+          <span class="card-action">View all →</span>
+        </div>
+        <div class="filter-bar">
+          <input type="text" placeholder="Search by name, NPC, email..." />
+          <select class="filter-select"><option>All NPCs</option><option>India</option><option>China</option><option>Japan</option></select>
+          <select class="filter-select"><option>All types</option><option>Injury</option><option>Illness</option></select>
+          <button class="filter-btn"><i class="ti ti-filter" style="font-size:13px" aria-hidden="true"></i> Filter</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th class="td-num">#</th>
+              <th class="td-npc">NPC</th>
+              <th class="td-name">Reported by</th>
+              <th class="td-date">Date</th>
+              <th class="td-email">Email</th>
+              <th class="td-badge">Injuries</th>
+              <th class="td-badge2">Illnesses</th>
+              <th class="td-status">Status</th>
+              <th class="td-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-num">1</td>
+              <td><div class="npc-pill"><div class="npc-dot"></div>India</div></td>
+              <td>Abc</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">6/18/2026</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">xyz@gmail.com</td>
+              <td><span class="count-badge inj-badge"><i class="ti ti-bandage" style="font-size:11px" aria-hidden="true"></i> 1</span></td>
+              <td><span class="count-badge zero-badge">0</span></td>
+              <td><span class="status-dot"><div class="dot dot-new"></div> New</span></td>
+              <td><div class="action-btns"><button class="btn-view"><i class="ti ti-eye" aria-hidden="true"></i> View</button><button class="btn-del"><i class="ti ti-trash" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="td-num">2</td>
+              <td><div class="npc-pill"><div class="npc-dot"></div>Japan</div></td>
+              <td>Dr. Tanaka</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">6/17/2026</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">tanaka@jpc.jp</td>
+              <td><span class="count-badge inj-badge"><i class="ti ti-bandage" style="font-size:11px" aria-hidden="true"></i> 3</span></td>
+              <td><span class="count-badge ill-badge"><i class="ti ti-virus" style="font-size:11px" aria-hidden="true"></i> 1</span></td>
+              <td><span class="status-dot"><div class="dot dot-review"></div> Review</span></td>
+              <td><div class="action-btns"><button class="btn-view"><i class="ti ti-eye" aria-hidden="true"></i> View</button><button class="btn-del"><i class="ti ti-trash" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="td-num">3</td>
+              <td><div class="npc-pill"><div class="npc-dot"></div>China</div></td>
+              <td>Dr. Liu Wei</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">6/17/2026</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">liu@cpf.cn</td>
+              <td><span class="count-badge inj-badge"><i class="ti ti-bandage" style="font-size:11px" aria-hidden="true"></i> 2</span></td>
+              <td><span class="count-badge ill-badge"><i class="ti ti-virus" style="font-size:11px" aria-hidden="true"></i> 2</span></td>
+              <td><span class="status-dot"><div class="dot dot-new"></div> New</span></td>
+              <td><div class="action-btns"><button class="btn-view"><i class="ti ti-eye" aria-hidden="true"></i> View</button><button class="btn-del"><i class="ti ti-trash" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="td-num">4</td>
+              <td><div class="npc-pill"><div class="npc-dot"></div>South Korea</div></td>
+              <td>Kim Soo-Jin</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">6/16/2026</td>
+              <td style="color:var(--color-text-secondary);font-size:12px">kim@kpf.kr</td>
+              <td><span class="count-badge zero-badge">0</span></td>
+              <td><span class="count-badge ill-badge"><i class="ti ti-virus" style="font-size:11px" aria-hidden="true"></i> 4</span></td>
+              <td><span class="status-dot"><div class="dot dot-review"></div> Review</span></td>
+              <td><div class="action-btns"><button class="btn-view"><i class="ti ti-eye" aria-hidden="true"></i> View</button><button class="btn-del"><i class="ti ti-trash" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="mini-chart-card">
+        <div class="card-header">
+          <div class="card-title"><i class="ti ti-chart-bar" aria-hidden="true"></i> Daily trend</div>
+        </div>
+        <div class="chart-wrap">
+          <div style="position:relative;height:130px"><canvas id="trendChart" role="img" aria-label="Daily injury and illness trend over 7 days">Trend data for last 7 days.</canvas></div>
+        </div>
+      </div>
+
+      <div class="mini-chart-card">
+        <div class="card-header">
+          <div class="card-title"><i class="ti ti-body-scan" aria-hidden="true"></i> Injury zones</div>
+        </div>
+        <div class="body-heatmap">
+          <div class="body-grid">
+            <div class="body-zone" style="grid-column:span 2">
+              <i class="ti ti-arrow-up" style="font-size:12px;color:#E03A18" aria-hidden="true"></i>
+              <span style="font-size:12px;color:var(--color-text-primary)">Upper limb</span>
+              <div class="zone-bar"><div class="zone-fill" style="width:70%;background:#E03A18"></div></div>
+              <span class="zone-count">18</span>
+            </div>
+            <div class="body-zone" style="grid-column:span 2">
+              <i class="ti ti-arrow-down" style="font-size:12px;color:#BA7517" aria-hidden="true"></i>
+              <span style="font-size:12px;color:var(--color-text-primary)">Lower limb</span>
+              <div class="zone-bar"><div class="zone-fill" style="width:55%;background:#BA7517"></div></div>
+              <span class="zone-count">14</span>
+            </div>
+            <div class="body-zone" style="grid-column:span 2">
+              <i class="ti ti-spine" style="font-size:12px;color:#185FA5" aria-hidden="true"></i>
+              <span style="font-size:12px;color:var(--color-text-primary)">Spine / trunk</span>
+              <div class="zone-bar"><div class="zone-fill" style="width:30%;background:#185FA5"></div></div>
+              <span class="zone-count">7</span>
+            </div>
+            <div class="body-zone" style="grid-column:span 2">
+              <i class="ti ti-brain" style="font-size:12px;color:#533AB7" aria-hidden="true"></i>
+              <span style="font-size:12px;color:var(--color-text-primary)">Head / neck</span>
+              <div class="zone-bar"><div class="zone-fill" style="width:15%;background:#533AB7"></div></div>
+              <span class="zone-count">2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-chart-card">
+        <div class="card-header">
+          <div class="card-title"><i class="ti ti-flag" aria-hidden="true"></i> Top NPCs</div>
+        </div>
+        <div class="recent-npc">
+          <div class="npc-row">
+            <span class="npc-name">China</span>
+            <div class="npc-bar-wrap"><div class="npc-bar-fill" style="width:80%"></div></div>
+            <span class="npc-count">8</span>
+          </div>
+          <div class="npc-row">
+            <span class="npc-name">Japan</span>
+            <div class="npc-bar-wrap"><div class="npc-bar-fill" style="width:60%"></div></div>
+            <span class="npc-count">6</span>
+          </div>
+          <div class="npc-row">
+            <span class="npc-name">India</span>
+            <div class="npc-bar-wrap"><div class="npc-bar-fill" style="width:40%"></div></div>
+            <span class="npc-count">4</span>
+          </div>
+          <div class="npc-row">
+            <span class="npc-name">S. Korea</span>
+            <div class="npc-bar-wrap"><div class="npc-bar-fill" style="width:30%"></div></div>
+            <span class="npc-count">3</span>
+          </div>
+          <div class="npc-row">
+            <span class="npc-name">Iran</span>
+            <div class="npc-bar-wrap"><div class="npc-bar-fill" style="width:20%"></div></div>
+            <span class="npc-count">2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('trendChart'),{
+  type:'line',
+  data:{
+    labels:['Jun 16','Jun 17','Jun 18','Jun 19','Jun 20','Jun 21','Jun 22'],
+    datasets:[
+      {label:'Injuries',data:[4,7,5,9,6,8,5],borderColor:'#E03A18',backgroundColor:'rgba(224,58,24,0.08)',borderWidth:2,pointRadius:3,fill:true,tension:.4},
+      {label:'Illnesses',data:[1,2,3,2,4,3,3],borderColor:'#BA7517',backgroundColor:'rgba(186,117,23,0.06)',borderWidth:2,pointRadius:3,fill:true,tension:.4}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+    scales:{
+      x:{ticks:{font:{size:10},color:'#888',maxRotation:30},grid:{display:false}},
+      y:{ticks:{font:{size:10},color:'#888'},grid:{color:'rgba(0,0,0,0.04)'}}
+    }
+  }
+});
+</script>

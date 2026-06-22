@@ -28,7 +28,8 @@ const EMPTY_FORM_DATA: FormData = {
 interface FormContextValue {
   formData: FormData;
   setStep1: (step1: FormData["step1"]) => void;
-  setStep2: (step2: FormData["step2"]) => void;
+  setInjuries: (injuries: FormData["step2"]["injuries"]) => void;
+  setIllnesses: (illnesses: FormData["step2"]["illnesses"]) => void;
   saveAndResumeLater: () => void;
   resetForm: () => void;
 }
@@ -53,8 +54,12 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
     setFormData((prev) => ({ ...prev, step1 }));
   }, []);
 
-  const setStep2 = useCallback((step2: FormData["step2"]) => {
-    setFormData((prev) => ({ ...prev, step2 }));
+  const setInjuries = useCallback((injuries: FormData["step2"]["injuries"]) => {
+    setFormData((prev) => ({ ...prev, step2: { ...prev.step2, injuries } }));
+  }, []);
+
+  const setIllnesses = useCallback((illnesses: FormData["step2"]["illnesses"]) => {
+    setFormData((prev) => ({ ...prev, step2: { ...prev.step2, illnesses } }));
   }, []);
 
   const saveAndResumeLater = useCallback(() => {
@@ -68,7 +73,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <FormContext.Provider
-      value={{ formData, setStep1, setStep2, saveAndResumeLater, resetForm }}
+      value={{ formData, setStep1, setInjuries, setIllnesses, saveAndResumeLater, resetForm }}
     >
       {children}
     </FormContext.Provider>

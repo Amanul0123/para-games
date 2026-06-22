@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Header() {
   return (
     <header className="relative w-full min-h-[200px] bg-brand-red overflow-hidden">
@@ -25,40 +27,14 @@ export default function Header() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-white">
-          <div className="text-right">
-            <p className="text-sm font-semibold tracking-wide">
-              ASIAN PARALYMPIC COMMITTEE
-            </p>
-            <p className="text-xs opacity-90">
-              5th Asian Para Games Aichi-Nagoya 2026
-            </p>
-          </div>
-
-          <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
-            <circle cx="22" cy="22" r="20" fill="none" stroke="white" strokeWidth="2" />
-            <circle cx="22" cy="14" r="4" fill="white" />
-            <path
-              d="M22 18 L22 28 M14 23 L30 23 M22 28 L16 36 M22 28 L28 36"
-              stroke="white"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-            <circle cx="22" cy="30" r="9" fill="none" stroke="white" strokeWidth="2" />
-          </svg>
-
-          <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
-            <path
-              d="M18 2 C 14 10 10 14 10 22 C10 28 14 32 18 32 C22 32 26 28 26 22 C26 14 22 10 18 2 Z"
-              fill="white"
-            />
-            <path
-              d="M18 8 C 16 13 14 16 14 21 C14 25 16 27 18 27 C20 27 22 25 22 21 C22 16 20 13 18 8 Z"
-              fill="#E03A18"
-            />
-          </svg>
-        </div>
+        <Image
+          src="/logo_white_B.png"
+          alt="Asian Paralympic Committee - 5th Asian Para Games Aichi-Nagoya 2026"
+          width={360}
+          height={160}
+          className="h-auto w-64 object-contain sm:w-80"
+          priority
+        />
       </div>
     </header>
   );

@@ -20,7 +20,10 @@ export default async function AdminLayout({
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
       />
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50">
+      <div
+        className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50"
+        suppressHydrationWarning
+      >
         <div
           className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand-red/20 blur-[120px]"
           aria-hidden="true"

@@ -9,7 +9,10 @@ export default function FormLayout({ children }: { children: React.ReactNode }) 
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
       />
-      <div className="relative flex min-h-screen flex-1 flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50">
+      <div
+        className="relative flex min-h-screen flex-1 flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50"
+        suppressHydrationWarning
+      >
         <div
           className="pointer-events-none absolute -left-32 top-40 h-96 w-96 rounded-full bg-brand-red/15 blur-[130px]"
           aria-hidden="true"

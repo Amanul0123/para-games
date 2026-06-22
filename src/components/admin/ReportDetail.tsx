@@ -4,46 +4,52 @@ interface ReportDetailProps {
   report: ReportDetailType;
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  submitted: "New",
+  under_review: "Under Review",
+  resolved: "Resolved",
+};
+
 export default function ReportDetail({ report }: ReportDetailProps) {
   return (
-    <div className="space-y-8">
-      <section className="rounded-md border border-border-gray p-4">
-        <h2 className="mb-3 text-lg font-semibold text-text-dark">Reporter Information</h2>
+    <div className="space-y-6">
+      <section className="rounded-xl border border-white/70 bg-white/60 p-4 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+        <h2 className="mb-3 text-base font-semibold text-slate-800">Reporter Information</h2>
         <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Field label="NPC" value={report.npc} />
           <Field label="Reported By" value={report.reportedBy} />
           <Field
             label="Date of Report"
-            value={new Date(report.dateOfReport).toLocaleDateString()}
+            value={new Date(report.dateOfReport).toLocaleDateString("en-US")}
           />
           <Field label="Email" value={report.email} />
           <Field label="Phone" value={report.phone} />
-          <Field label="Status" value={report.status} />
+          <Field label="Status" value={STATUS_LABELS[report.status] ?? report.status} />
         </dl>
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-text-dark">
+        <h2 className="mb-3 text-base font-semibold text-slate-800">
           Injuries ({report.injuries.length})
         </h2>
-        <div className="overflow-x-auto rounded-md border border-border-gray">
+        <div className="overflow-x-auto rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <table className="w-full text-sm">
-            <thead className="bg-gray-100 text-left">
-              <tr>
-                <th className="px-3 py-2">Accreditation</th>
-                <th className="px-3 py-2">Sport / Event</th>
-                <th className="px-3 py-2">Round / Heat</th>
-                <th className="px-3 py-2">Date</th>
-                <th className="px-3 py-2">Time</th>
-                <th className="px-3 py-2">Body Part</th>
-                <th className="px-3 py-2">Type</th>
-                <th className="px-3 py-2">Cause</th>
-                <th className="px-3 py-2">Absence</th>
+            <thead>
+              <tr className="bg-slate-50/60 text-left text-slate-400">
+                <th className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Round / Heat</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Date</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Time</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Body Part</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Type</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
               </tr>
             </thead>
             <tbody>
               {report.injuries.map((injury, i) => (
-                <tr key={i} className="border-t border-border-gray">
+                <tr key={i} className="border-t border-slate-200/70 text-slate-700">
                   <td className="px-3 py-2">{injury.accreditationNo}</td>
                   <td className="px-3 py-2">{injury.sportEvent}</td>
                   <td className="px-3 py-2">{injury.roundHeat}</td>
@@ -63,7 +69,7 @@ export default function ReportDetail({ report }: ReportDetailProps) {
               ))}
               {report.injuries.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-3 py-4 text-center text-gray-500">
+                  <td colSpan={9} className="px-3 py-4 text-center text-slate-400">
                     No injuries reported.
                   </td>
                 </tr>
@@ -74,26 +80,26 @@ export default function ReportDetail({ report }: ReportDetailProps) {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-text-dark">
+        <h2 className="mb-3 text-base font-semibold text-slate-800">
           Illnesses ({report.illnesses.length})
         </h2>
-        <div className="overflow-x-auto rounded-md border border-border-gray">
+        <div className="overflow-x-auto rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <table className="w-full text-sm">
-            <thead className="bg-gray-100 text-left">
-              <tr>
-                <th className="px-3 py-2">Accreditation</th>
-                <th className="px-3 py-2">Sport / Event</th>
-                <th className="px-3 py-2">Diagnosis</th>
-                <th className="px-3 py-2">Occurred On</th>
-                <th className="px-3 py-2">System</th>
-                <th className="px-3 py-2">Symptoms</th>
-                <th className="px-3 py-2">Cause</th>
-                <th className="px-3 py-2">Absence</th>
+            <thead>
+              <tr className="bg-slate-50/60 text-left text-slate-400">
+                <th className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Diagnosis</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Occurred On</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">System</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Symptoms</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
+                <th className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
               </tr>
             </thead>
             <tbody>
               {report.illnesses.map((illness, i) => (
-                <tr key={i} className="border-t border-border-gray">
+                <tr key={i} className="border-t border-slate-200/70 text-slate-700">
                   <td className="px-3 py-2">{illness.accreditationNo}</td>
                   <td className="px-3 py-2">{illness.sportEvent}</td>
                   <td className="px-3 py-2">{illness.diagnosis}</td>
@@ -112,7 +118,7 @@ export default function ReportDetail({ report }: ReportDetailProps) {
               ))}
               {report.illnesses.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-3 py-4 text-center text-gray-500">
+                  <td colSpan={8} className="px-3 py-4 text-center text-slate-400">
                     No illnesses reported.
                   </td>
                 </tr>
@@ -128,8 +134,8 @@ export default function ReportDetail({ report }: ReportDetailProps) {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-medium uppercase text-gray-500">{label}</dt>
-      <dd className="text-text-dark">{value}</dd>
+      <dt className="text-xs font-medium uppercase text-slate-400">{label}</dt>
+      <dd className="text-slate-800">{value}</dd>
     </div>
   );
 }

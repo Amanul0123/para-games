@@ -18,6 +18,16 @@ model Report {
   createdAt    DateTime  @default(now())
   injuries     Injury[]
   illnesses    Illness[]
+  notes        ReportNote[]
+}
+
+model ReportNote {
+  id        String   @id @default(uuid())
+  reportId  String
+  report    Report   @relation(fields: [reportId], references: [id])
+  author    String
+  message   String
+  createdAt DateTime @default(now())
 }
 
 model Injury {

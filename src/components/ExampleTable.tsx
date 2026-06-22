@@ -26,17 +26,25 @@ const ILLNESS_ROW = [
 
 export default function ExampleTable({ type }: ExampleTableProps) {
   const rows = type === "injury" ? INJURY_ROW : ILLNESS_ROW;
+  const icon = type === "injury" ? "ti-bandage" : "ti-virus";
+  const accent = type === "injury" ? "text-brand-red" : "text-amber-500";
 
   return (
-    <div className="overflow-x-auto rounded-md border border-border-gray bg-gray-50">
+    <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/70 backdrop-blur-sm">
+      <div className="flex items-center gap-2 border-b border-slate-200/70 bg-white/50 px-4 py-2.5">
+        <i className={`ti ${icon} ${accent}`} aria-hidden="true" />
+        <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          Example
+        </span>
+      </div>
       <table className="w-full text-sm">
         <tbody>
           {rows.map(([label, val]) => (
-            <tr key={label} className="border-b border-border-gray last:border-0">
-              <td className="w-1/3 px-4 py-2 font-medium text-gray-600">
+            <tr key={label} className="border-b border-slate-200/60 last:border-0">
+              <td className="w-1/3 px-4 py-2 font-medium text-slate-500">
                 {label}
               </td>
-              <td className="px-4 py-2 text-text-dark">{val}</td>
+              <td className="px-4 py-2 text-slate-700">{val}</td>
             </tr>
           ))}
         </tbody>

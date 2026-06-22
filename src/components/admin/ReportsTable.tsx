@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReportSummary } from "@/types";
@@ -8,12 +8,44 @@ import ConfirmDialog from "@/components/admin/ConfirmDialog";
 
 interface ReportsTableProps {
   reports: ReportSummary[];
+  npcOptions: string[];
 }
 
-export default function ReportsTable({ reports }: ReportsTableProps) {
+type TypeFilter = "all" | "injury" | "illness";
+type StatusFilter = "all" | "submitted" | "under_review" | "resolved";
+
+export default function ReportsTable({ reports, npcOptions }: ReportsTableProps) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [search, setSearch] = useState("");
+  const [npcFilter, setNpcFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+
+    return reports.filter((report) => {
+      const matchesSearch =
+        !q ||
+        report.reportedBy.toLowerCase().includes(q) ||
+        report.npc.toLowerCase().includes(q) ||
+        report.email.toLowerCase().includes(q);
+
+      const matchesNpc = npcFilter === "all" || report.npc === npcFilter;
+
+      const matchesType =
+        typeFilter === "all" ||
+        (typeFilter === "injury" && report.injuryCount > 0) ||
+        (typeFilter === "illness" && report.illnessCount > 0);
+
+      const matchesStatus = statusFilter === "all" || report.status === statusFilter;
+
+      return matchesSearch && matchesNpc && matchesType && matchesStatus;
+    });
+  }, [reports, search, npcFilter, typeFilter, statusFilter]);
 
   const handleDelete = async () => {
     if (!pendingId) return;
@@ -34,62 +66,128 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-md border border-border-gray">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="px-4 py-3 font-semibold text-text-dark">#</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">NPC</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Reported By</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Date</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Email</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Phone</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Injuries</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Illnesses</th>
-              <th className="px-4 py-3 font-semibold text-text-dark">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((report, i) => (
-              <tr key={report.id} className="border-t border-border-gray">
-                <td className="px-4 py-3">{i + 1}</td>
-                <td className="px-4 py-3">{report.npc}</td>
-                <td className="px-4 py-3">{report.reportedBy}</td>
-                <td className="px-4 py-3">
-                  {new Date(report.dateOfReport).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-3">{report.email}</td>
-                <td className="px-4 py-3">{report.phone}</td>
-                <td className="px-4 py-3">{report.injuryCount}</td>
-                <td className="px-4 py-3">{report.illnessCount}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/admin/report/${report.id}`}
-                      className="rounded-md bg-brand-cyan px-3 py-1 text-white hover:opacity-90"
-                    >
-                      View
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => setPendingId(report.id)}
-                      className="rounded-md bg-red-600 px-3 py-1 text-white hover:opacity-90"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
+      <div className="overflow-hidden rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+        <div className="flex items-center justify-between border-b border-slate-200/70 px-4 py-3">
+          <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
+            <i className="ti ti-table text-slate-400" aria-hidden="true" />
+            All Submissions
+          </div>
+          <span className="text-xs text-slate-400">{filtered.length} of {reports.length}</span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/70 bg-slate-50/60 px-4 py-3">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name, NPC, email..."
+            className="min-w-[180px] flex-1 rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl placeholder:text-slate-400 focus:border-brand-cyan/60 focus:outline-none"
+          />
+          <select
+            value={npcFilter}
+            onChange={(e) => setNpcFilter(e.target.value)}
+            className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="all">All NPCs</option>
+            {npcOptions.map((npc) => (
+              <option key={npc} value={npc}>
+                {npc}
+              </option>
             ))}
-            {reports.length === 0 && (
-              <tr>
-                <td colSpan={9} className="px-4 py-6 text-center text-gray-500">
-                  No submissions yet.
-                </td>
+          </select>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
+            className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="all">All types</option>
+            <option value="injury">Injury</option>
+            <option value="illness">Illness</option>
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+            className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="all">All statuses</option>
+            <option value="submitted">New</option>
+            <option value="under_review">Under Review</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50/60 text-left">
+                <Th>#</Th>
+                <Th>NPC</Th>
+                <Th>Reported by</Th>
+                <Th>Date</Th>
+                <Th>Email</Th>
+                <Th>Injuries</Th>
+                <Th>Illnesses</Th>
+                <Th>Status</Th>
+                <Th>Actions</Th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((report, i) => (
+                <tr
+                  key={report.id}
+                  className="border-t border-slate-200/70 transition-colors hover:bg-slate-50"
+                >
+                  <td className="px-4 py-2.5 text-xs text-slate-400">{i + 1}</td>
+                  <td className="px-4 py-2.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
+                      {report.npc}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2.5 text-slate-800">{report.reportedBy}</td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">
+                    {new Date(report.dateOfReport).toLocaleDateString("en-US")}
+                  </td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">{report.email}</td>
+                  <td className="px-4 py-2.5">
+                    <CountBadge count={report.injuryCount} kind="injury" />
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <CountBadge count={report.illnessCount} kind="illness" />
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <StatusDot status={report.status} />
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/admin/report/${report.id}`}
+                        className="flex items-center gap-1 rounded-md bg-[#185FA5] px-2.5 py-1 text-xs text-white shadow-sm hover:opacity-90"
+                      >
+                        <i className="ti ti-eye text-[13px]" aria-hidden="true" />
+                        View
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setPendingId(report.id)}
+                        className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+                      >
+                        <i className="ti ti-trash text-[13px]" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-400">
+                    No submissions match your filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <ConfirmDialog
@@ -101,5 +199,51 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
         onCancel={() => setPendingId(null)}
       />
     </>
+  );
+}
+
+function Th({ children }: { children: React.ReactNode }) {
+  return (
+    <th className="px-4 py-2.5 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+      {children}
+    </th>
+  );
+}
+
+function CountBadge({ count, kind }: { count: number; kind: "injury" | "illness" }) {
+  if (count === 0) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-400">
+        0
+      </span>
+    );
+  }
+
+  const styles =
+    kind === "injury"
+      ? "bg-red-50 text-red-600"
+      : "bg-amber-50 text-amber-600";
+
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${styles}`}>
+      <i className={`ti ${kind === "injury" ? "ti-bandage" : "ti-virus"} text-[11px]`} aria-hidden="true" />
+      {count}
+    </span>
+  );
+}
+
+const STATUS_STYLES: Record<string, { label: string; dot: string }> = {
+  submitted: { label: "New", dot: "bg-green-500" },
+  under_review: { label: "Under Review", dot: "bg-amber-500" },
+  resolved: { label: "Resolved", dot: "bg-slate-400" },
+};
+
+function StatusDot({ status }: { status: string }) {
+  const style = STATUS_STYLES[status] ?? STATUS_STYLES.submitted;
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs text-slate-600">
+      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
+      {style.label}
+    </span>
   );
 }

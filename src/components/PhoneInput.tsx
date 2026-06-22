@@ -12,7 +12,8 @@ interface PhoneInputProps {
 export default function PhoneInput({ value, onChange, error }: PhoneInputProps) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-text-dark">
+      <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+        <i className="ti ti-phone text-slate-400" aria-hidden="true" />
         Phone
       </label>
       <PhoneInputWithCountry
@@ -21,8 +22,8 @@ export default function PhoneInput({ value, onChange, error }: PhoneInputProps) 
         value={value as Value}
         onChange={(val) => onChange(val ?? "")}
         placeholder="Enter phone number"
-        className={`rounded-md border ${
-          error ? "border-red-500" : "border-border-gray"
+        className={`rounded-lg border bg-white/80 px-1 shadow-inner ${
+          error ? "border-red-400" : "border-slate-200 focus-within:border-brand-cyan/60"
         }`}
       />
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}

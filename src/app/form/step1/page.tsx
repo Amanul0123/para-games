@@ -7,6 +7,7 @@ import ProgressBar from "@/components/ProgressBar";
 import PhoneInput from "@/components/PhoneInput";
 import { useFormContext } from "@/context/FormContext";
 import { step1Schema, type Step1Input } from "@/lib/validations";
+import { getNpcFlag } from "@/lib/npcFlags";
 
 const NPC_OPTIONS = [
   "Afghanistan", "Bahrain", "Bangladesh", "Bhutan", "Brunei", "Cambodia",
@@ -42,105 +43,131 @@ export default function Step1Page() {
     <div>
       <ProgressBar step={1} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-text-dark">NPC</label>
-          <select
-            {...register("npc")}
-            className={`w-full rounded-md border px-3 py-2 text-sm focus:border-brand-cyan focus:outline-none ${
-              errors.npc ? "border-red-500" : "border-border-gray"
-            }`}
-          >
-            <option value="">Select NPC</option>
-            {NPC_OPTIONS.map((npc) => (
-              <option key={npc} value={npc}>
-                {npc}
-              </option>
-            ))}
-          </select>
-          {errors.npc && <p className="mt-1 text-sm text-red-500">{errors.npc.message}</p>}
+      <div className="rounded-xl border border-white/70 bg-white/60 p-6 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl sm:p-8">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-orange-500 shadow-[0_6px_16px_-4px_rgba(224,58,24,0.4)]">
+            <i className="ti ti-user text-xl text-white" aria-hidden="true" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-slate-800">Reporter Information</h2>
+            <p className="text-xs text-slate-500">Tell us who you are and which NPC you represent</p>
+          </div>
         </div>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-text-dark">
-            Report by (name)
-          </label>
-          <input
-            {...register("reportedBy")}
-            placeholder="Full name"
-            className={`w-full rounded-md border px-3 py-2 text-sm focus:border-brand-cyan focus:outline-none ${
-              errors.reportedBy ? "border-red-500" : "border-border-gray"
-            }`}
-          />
-          {errors.reportedBy && (
-            <p className="mt-1 text-sm text-red-500">{errors.reportedBy.message}</p>
-          )}
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+              <i className="ti ti-flag text-slate-400" aria-hidden="true" />
+              NPC
+            </label>
+            <select
+              {...register("npc")}
+              className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
+                errors.npc ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
+              }`}
+            >
+              <option value="">Select NPC</option>
+              {NPC_OPTIONS.map((npc) => (
+                <option key={npc} value={npc}>
+                  {getNpcFlag(npc)} {npc}
+                </option>
+              ))}
+            </select>
+            {errors.npc && <p className="mt-1 text-sm text-red-500">{errors.npc.message}</p>}
+          </div>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-text-dark">
-            Date of report
-          </label>
-          <input
-            type="date"
-            {...register("dateOfReport")}
-            className={`w-full rounded-md border px-3 py-2 text-sm focus:border-brand-cyan focus:outline-none ${
-              errors.dateOfReport ? "border-red-500" : "border-border-gray"
-            }`}
-          />
-          {errors.dateOfReport && (
-            <p className="mt-1 text-sm text-red-500">{errors.dateOfReport.message}</p>
-          )}
-        </div>
-
-        <h3 className="font-bold text-text-dark">Contact Details</h3>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-text-dark">Email</label>
-          <input
-            type="email"
-            {...register("email")}
-            placeholder="name@example.com"
-            className={`w-full rounded-md border px-3 py-2 text-sm focus:border-brand-cyan focus:outline-none ${
-              errors.email ? "border-red-500" : "border-border-gray"
-            }`}
-          />
-          {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
-        </div>
-
-        <Controller
-          name="phone"
-          control={control}
-          render={({ field }) => (
-            <PhoneInput
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.phone?.message}
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+              <i className="ti ti-id-badge-2 text-slate-400" aria-hidden="true" />
+              Report by (name)
+            </label>
+            <input
+              {...register("reportedBy")}
+              placeholder="Full name"
+              className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
+                errors.reportedBy ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
+              }`}
             />
-          )}
-        />
+            {errors.reportedBy && (
+              <p className="mt-1 text-sm text-red-500">{errors.reportedBy.message}</p>
+            )}
+          </div>
 
-        <p className="rounded-md bg-orange-50 p-3 text-sm text-link-teal">
-          Please ensure all contact details are accurate as they will be used
-          to follow up on this report.
-        </p>
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+              <i className="ti ti-calendar-event text-slate-400" aria-hidden="true" />
+              Date of report
+            </label>
+            <input
+              type="date"
+              {...register("dateOfReport")}
+              className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
+                errors.dateOfReport ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
+              }`}
+            />
+            {errors.dateOfReport && (
+              <p className="mt-1 text-sm text-red-500">{errors.dateOfReport.message}</p>
+            )}
+          </div>
 
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="rounded-md bg-brand-cyan px-6 py-2 font-medium text-white hover:opacity-90"
-          >
-            NEXT
-          </button>
-          <button
-            type="button"
-            onClick={saveAndResumeLater}
-            className="text-sm text-link-teal hover:underline"
-          >
-            Save and Resume Later
-          </button>
-        </div>
-      </form>
+          <div className="flex items-center gap-2 border-t border-slate-200/70 pt-5">
+            <i className="ti ti-address-book text-slate-400" aria-hidden="true" />
+            <h3 className="font-semibold text-slate-800">Contact Details</h3>
+          </div>
+
+          <div>
+            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+              <i className="ti ti-mail text-slate-400" aria-hidden="true" />
+              Email
+            </label>
+            <input
+              type="email"
+              {...register("email")}
+              placeholder="name@example.com"
+              className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
+                errors.email ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
+              }`}
+            />
+            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
+          </div>
+
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneInput
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.phone?.message}
+              />
+            )}
+          />
+
+          <p className="flex items-start gap-2 rounded-lg border border-cyan-100 bg-cyan-50/70 p-3 text-sm text-link-teal">
+            <i className="ti ti-info-circle mt-0.5 flex-shrink-0" aria-hidden="true" />
+            Please ensure all contact details are accurate as they will be used
+            to follow up on this report.
+          </p>
+
+          <div className="flex items-center justify-between pt-2">
+            <button
+              type="submit"
+              className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-cyan to-cyan-400 px-6 py-2.5 font-medium text-white shadow-[0_8px_20px_-4px_rgba(0,188,212,0.5)] transition-opacity hover:opacity-90"
+            >
+              NEXT
+              <i className="ti ti-arrow-right" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={saveAndResumeLater}
+              className="flex items-center gap-1.5 text-sm text-link-teal hover:underline"
+            >
+              <i className="ti ti-clock-pause" aria-hidden="true" />
+              Save and Resume Later
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

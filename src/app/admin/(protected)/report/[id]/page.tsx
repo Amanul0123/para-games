@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ReportDetail from "@/components/admin/ReportDetail";
 import DeleteReportButton from "@/components/admin/DeleteReportButton";
+import ReportStatusPanel from "@/components/admin/ReportStatusPanel";
+import ReportNotes from "@/components/admin/ReportNotes";
 import { ReportDetail as ReportDetailType } from "@/types";
 
 export default async function AdminReportDetailPage({
@@ -14,7 +16,7 @@ export default async function AdminReportDetailPage({
 
   const report = await prisma.report.findUnique({
     where: { id },
-    include: { injuries: true, illnesses: true },
+    include: { injuries: true, illnesses: true, notes: { orderBy: { createdAt: "desc" } } },
   });
 
   if (!report) {
@@ -57,6 +59,12 @@ export default async function AdminReportDetailPage({
       causeCode: illness.causeCode ?? undefined,
       absenceDays: illness.absenceDays ?? undefined,
     })),
+    notes: report.notes.map((note) => ({
+      id: note.id,
+      author: note.author,
+      message: note.message,
+      createdAt: note.createdAt.toISOString(),
+    })),
   };
 
   return (
@@ -64,14 +72,20 @@ export default async function AdminReportDetailPage({
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/admin/dashboard"
-          className="text-sm text-link-teal hover:underline"
+          className="text-sm text-brand-cyan hover:underline"
         >
           &larr; Back to Dashboard
         </Link>
-        <DeleteReportButton id={report.id} />
+        <div className="flex items-center gap-3">
+          <ReportStatusPanel id={report.id} initialStatus={report.status} />
+          <DeleteReportButton id={report.id} />
+        </div>
       </div>
-      <h1 className="mb-6 text-xl font-bold text-text-dark">Report Detail</h1>
-      <ReportDetail report={data} />
+      <h1 className="mb-6 text-xl font-bold text-slate-800">Report Detail</h1>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+        <ReportDetail report={data} />
+        <ReportNotes id={report.id} initialNotes={data.notes} />
+      </div>
     </div>
   );
 }

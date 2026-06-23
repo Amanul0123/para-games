@@ -28,7 +28,7 @@ export default function DeleteReportButton({ id }: { id: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+        className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-1"
       >
         Delete Report
       </button>

@@ -29,7 +29,7 @@ function SuccessContent() {
           Your report has been received. Our medical team will review it and
           be in touch with you shortly.
         </p>
-        <p className="flex items-center gap-1.5 text-xs text-slate-400">
+        <p className="flex items-center gap-1.5 text-xs text-slate-500">
           <i className="ti ti-mail" aria-hidden="true" />
           We&apos;ve also emailed you a link to manage this report later.
         </p>

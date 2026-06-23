@@ -35,16 +35,16 @@ export default function ReportDetail({ report }: ReportDetailProps) {
         <div className="overflow-x-auto rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50/60 text-left text-slate-400">
-                <th className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Round / Heat</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Date</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Time</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Body Part</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Type</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
+              <tr className="bg-slate-50/60 text-left text-slate-500">
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Round / Heat</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Date</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Time</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Body Part</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Type</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
               </tr>
             </thead>
             <tbody>
@@ -69,7 +69,7 @@ export default function ReportDetail({ report }: ReportDetailProps) {
               ))}
               {report.injuries.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-3 py-4 text-center text-slate-400">
+                  <td colSpan={9} className="px-3 py-4 text-center text-slate-500">
                     No injuries reported.
                   </td>
                 </tr>
@@ -86,15 +86,15 @@ export default function ReportDetail({ report }: ReportDetailProps) {
         <div className="overflow-x-auto rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50/60 text-left text-slate-400">
-                <th className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Diagnosis</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Occurred On</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">System</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Symptoms</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
-                <th className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
+              <tr className="bg-slate-50/60 text-left text-slate-500">
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Accreditation</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Sport / Event</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Diagnosis</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Occurred On</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">System</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Symptoms</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Cause</th>
+                <th scope="col" className="px-3 py-2 text-xs font-medium uppercase">Absence</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +118,7 @@ export default function ReportDetail({ report }: ReportDetailProps) {
               ))}
               {report.illnesses.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-3 py-4 text-center text-slate-400">
+                  <td colSpan={8} className="px-3 py-4 text-center text-slate-500">
                     No illnesses reported.
                   </td>
                 </tr>
@@ -134,7 +134,7 @@ export default function ReportDetail({ report }: ReportDetailProps) {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-medium uppercase text-slate-400">{label}</dt>
+      <dt className="text-xs font-medium uppercase text-slate-500">{label}</dt>
       <dd className="text-slate-800">{value}</dd>
     </div>
   );

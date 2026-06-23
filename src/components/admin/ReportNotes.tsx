@@ -42,7 +42,7 @@ export default function ReportNotes({
   return (
     <div className="h-fit overflow-hidden rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
       <div className="flex items-center gap-2 border-b border-slate-200/70 px-4 py-3">
-        <i className="ti ti-notes text-slate-400" aria-hidden="true" />
+        <i className="ti ti-notes text-slate-500" aria-hidden="true" />
         <span className="text-sm font-medium text-slate-800">Internal Notes</span>
       </div>
 
@@ -52,7 +52,7 @@ export default function ReportNotes({
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Add a note for the medical team..."
           rows={3}
-          className="w-full rounded-md border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-brand-cyan/60 focus:outline-none"
+          className="w-full rounded-md border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-500 focus:border-brand-cyan/60 focus:outline-none"
         />
         {error && <p className="text-xs text-red-600">{error}</p>}
         <button
@@ -68,11 +68,11 @@ export default function ReportNotes({
 
       <div className="max-h-96 space-y-3 overflow-y-auto border-t border-slate-200/70 px-4 py-3">
         {notes.length === 0 && (
-          <p className="text-xs text-slate-400">No notes yet.</p>
+          <p className="text-xs text-slate-500">No notes yet.</p>
         )}
         {notes.map((note) => (
           <div key={note.id} className="rounded-md bg-slate-50/80 px-3 py-2">
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
+            <div className="flex items-center justify-between text-[11px] text-slate-500">
               <span className="font-medium text-slate-600">{note.author}</span>
               <span>{new Date(note.createdAt).toLocaleString("en-US")}</span>
             </div>

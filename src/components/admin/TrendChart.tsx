@@ -83,6 +83,25 @@ export default function TrendChart({ data }: TrendChartProps) {
             aria-label="Daily injury and illness trend over 7 days"
           />
         </div>
+        <table className="sr-only">
+          <caption>Daily injury and illness trend</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Injuries</th>
+              <th scope="col">Illnesses</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((d) => (
+              <tr key={d.label}>
+                <th scope="row">{d.label}</th>
+                <td>{d.injuries}</td>
+                <td>{d.illnesses}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

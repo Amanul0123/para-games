@@ -8,12 +8,12 @@ export default function TopNpcsCard({ npcs }: TopNpcsCardProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
       <div className="flex items-center gap-2 border-b border-slate-200/70 px-4 py-3">
-        <i className="ti ti-flag text-slate-400" aria-hidden="true" />
+        <i className="ti ti-flag text-slate-500" aria-hidden="true" />
         <span className="text-sm font-medium text-slate-800">Top NPCs</span>
       </div>
       <div className="p-4">
         {npcs.length === 0 && (
-          <p className="text-xs text-slate-400">No submissions yet.</p>
+          <p className="text-xs text-slate-500">No submissions yet.</p>
         )}
         {npcs.map((npc) => (
           <div

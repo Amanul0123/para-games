@@ -41,10 +41,11 @@ export default function ReportStatusPanel({
 
   return (
     <select
+      aria-label="Report status"
       value={status}
       disabled={saving}
       onChange={(e) => handleChange(e.target.value)}
-      className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none disabled:opacity-60"
+      className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 disabled:opacity-60"
     >
       {STATUS_OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>

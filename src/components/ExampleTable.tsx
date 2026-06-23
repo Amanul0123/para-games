@@ -38,12 +38,19 @@ export default function ExampleTable({ type }: ExampleTableProps) {
         </span>
       </div>
       <table className="w-full text-sm">
+        <caption className="sr-only">Example {type} report values</caption>
+        <thead>
+          <tr className="sr-only">
+            <th scope="col">Field</th>
+            <th scope="col">Example value</th>
+          </tr>
+        </thead>
         <tbody>
           {rows.map(([label, val]) => (
             <tr key={label} className="border-b border-slate-200/60 last:border-0">
-              <td className="w-1/3 px-4 py-2 font-medium text-slate-500">
+              <th scope="row" className="w-1/3 px-4 py-2 text-left font-medium text-slate-500">
                 {label}
-              </td>
+              </th>
               <td className="px-4 py-2 text-slate-700">{val}</td>
             </tr>
           ))}

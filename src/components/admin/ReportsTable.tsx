@@ -69,21 +69,29 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
       <div className="overflow-hidden rounded-xl border border-white/70 bg-white/60 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
         <div className="flex items-center justify-between border-b border-slate-200/70 px-4 py-3">
           <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
-            <i className="ti ti-table text-slate-400" aria-hidden="true" />
+            <i className="ti ti-table text-slate-500" aria-hidden="true" />
             All Submissions
           </div>
-          <span className="text-xs text-slate-400">{filtered.length} of {reports.length}</span>
+          <span className="text-xs text-slate-500">{filtered.length} of {reports.length}</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/70 bg-slate-50/60 px-4 py-3">
+          <label htmlFor="reports-search" className="sr-only">
+            Search reports by name, NPC, or email
+          </label>
           <input
+            id="reports-search"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, NPC, email..."
-            className="min-w-[180px] flex-1 rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl placeholder:text-slate-400 focus:border-brand-cyan/60 focus:outline-none"
+            className="min-w-[180px] flex-1 rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl placeholder:text-slate-500 focus:border-brand-cyan/60 focus:outline-none"
           />
+          <label htmlFor="npc-filter" className="sr-only">
+            Filter by NPC
+          </label>
           <select
+            id="npc-filter"
             value={npcFilter}
             onChange={(e) => setNpcFilter(e.target.value)}
             className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
@@ -95,7 +103,11 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
               </option>
             ))}
           </select>
+          <label htmlFor="type-filter" className="sr-only">
+            Filter by report type
+          </label>
           <select
+            id="type-filter"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
             className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
@@ -104,7 +116,11 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
             <option value="injury">Injury</option>
             <option value="illness">Illness</option>
           </select>
+          <label htmlFor="status-filter" className="sr-only">
+            Filter by status
+          </label>
           <select
+            id="status-filter"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             className="rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl focus:border-brand-cyan/60 focus:outline-none"
@@ -137,7 +153,7 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
                   key={report.id}
                   className="border-t border-slate-200/70 transition-colors hover:bg-slate-50"
                 >
-                  <td className="px-4 py-2.5 text-xs text-slate-400">{i + 1}</td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">{i + 1}</td>
                   <td className="px-4 py-2.5">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-700">
                       <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
@@ -162,6 +178,7 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/admin/report/${report.id}`}
+                        aria-label={`View report for ${report.reportedBy}`}
                         className="flex items-center gap-1 rounded-md bg-[#185FA5] px-2.5 py-1 text-xs text-white shadow-sm hover:opacity-90"
                       >
                         <i className="ti ti-eye text-[13px]" aria-hidden="true" />
@@ -170,6 +187,7 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
                       <button
                         type="button"
                         onClick={() => setPendingId(report.id)}
+                        aria-label={`Delete report for ${report.reportedBy}`}
                         className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
                       >
                         <i className="ti ti-trash text-[13px]" aria-hidden="true" />
@@ -180,7 +198,7 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-400">
+                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-500">
                     No submissions match your filters.
                   </td>
                 </tr>
@@ -204,7 +222,7 @@ export default function ReportsTable({ reports, npcOptions }: ReportsTableProps)
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-2.5 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+    <th scope="col" className="px-4 py-2.5 text-[11px] font-medium uppercase tracking-wide text-slate-500">
       {children}
     </th>
   );
@@ -213,7 +231,7 @@ function Th({ children }: { children: React.ReactNode }) {
 function CountBadge({ count, kind }: { count: number; kind: "injury" | "illness" }) {
   if (count === 0) {
     return (
-      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-400">
+      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
         0
       </span>
     );

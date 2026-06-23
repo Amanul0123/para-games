@@ -16,11 +16,11 @@ export default async function AdminSettingsPage() {
         <h2 className="mb-3 text-sm font-medium text-slate-800">Profile</h2>
         <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <dt className="text-xs uppercase text-slate-400">Name</dt>
+            <dt className="text-xs uppercase text-slate-500">Name</dt>
             <dd className="text-slate-800">{session?.user?.name ?? "Admin"}</dd>
           </div>
           <div>
-            <dt className="text-xs uppercase text-slate-400">Email</dt>
+            <dt className="text-xs uppercase text-slate-500">Email</dt>
             <dd className="text-slate-800">{session?.user?.email}</dd>
           </div>
         </dl>

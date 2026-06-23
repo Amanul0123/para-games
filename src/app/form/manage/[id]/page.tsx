@@ -177,7 +177,7 @@ export default function ManageReportPage() {
           }
           className="flex items-center gap-1.5 rounded-md border border-white/70 bg-white/60 px-3 py-1.5 text-[13px] text-slate-700 shadow-sm backdrop-blur-xl hover:bg-white/90"
         >
-          <i className="ti ti-file-type-pdf text-slate-400" aria-hidden="true" />
+          <i className="ti ti-file-type-pdf text-slate-500" aria-hidden="true" />
           Download PDF
         </button>
       </div>
@@ -194,13 +194,13 @@ export default function ManageReportPage() {
 
       <section className="rounded-xl border border-white/70 bg-white/60 p-6 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl sm:p-8">
         <h4 className="mb-4 flex items-center gap-1.5 font-semibold text-slate-800">
-          <i className="ti ti-user text-slate-400" aria-hidden="true" />
+          <i className="ti ti-user text-slate-500" aria-hidden="true" />
           Reporter Information
         </h4>
         <div className="space-y-5">
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <i className="ti ti-flag text-slate-400" aria-hidden="true" />
+              <i className="ti ti-flag text-slate-500" aria-hidden="true" />
               NPC
             </label>
             <select
@@ -218,7 +218,7 @@ export default function ManageReportPage() {
 
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <i className="ti ti-id-badge-2 text-slate-400" aria-hidden="true" />
+              <i className="ti ti-id-badge-2 text-slate-500" aria-hidden="true" />
               Report by (name)
             </label>
             <input
@@ -230,7 +230,7 @@ export default function ManageReportPage() {
 
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <i className="ti ti-calendar-event text-slate-400" aria-hidden="true" />
+              <i className="ti ti-calendar-event text-slate-500" aria-hidden="true" />
               Date of report
             </label>
             <input
@@ -243,7 +243,7 @@ export default function ManageReportPage() {
 
           <div>
             <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <i className="ti ti-mail text-slate-400" aria-hidden="true" />
+              <i className="ti ti-mail text-slate-500" aria-hidden="true" />
               Email
             </label>
             <input
@@ -305,7 +305,7 @@ export default function ManageReportPage() {
             />
           ))}
           {injuries.length === 0 && (
-            <p className="text-sm text-slate-400">No injuries recorded.</p>
+            <p className="text-sm text-slate-500">No injuries recorded.</p>
           )}
         </div>
       </section>
@@ -353,7 +353,7 @@ export default function ManageReportPage() {
             />
           ))}
           {illnesses.length === 0 && (
-            <p className="text-sm text-slate-400">No illnesses recorded.</p>
+            <p className="text-sm text-slate-500">No illnesses recorded.</p>
           )}
         </div>
       </section>

@@ -33,9 +33,9 @@ export default function ProgressBar({ step }: ProgressBarProps) {
             <li key={s.id} className="flex flex-1 items-center last:flex-none">
               <button
                 type="button"
-                disabled={!isCompleted}
-                onClick={() => router.push(s.path)}
-                className={`flex flex-col items-center gap-1.5 text-center ${
+                aria-disabled={!isCompleted}
+                onClick={() => isCompleted && router.push(s.path)}
+                className={`flex flex-col items-center gap-1.5 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2 ${
                   isCompleted ? "cursor-pointer" : "cursor-default"
                 }`}
                 aria-current={isActive ? "step" : undefined}

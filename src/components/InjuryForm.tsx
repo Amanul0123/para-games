@@ -35,6 +35,7 @@ export default function InjuryForm({ index, value, onChange, onRemove }: InjuryF
           <button
             type="button"
             onClick={onRemove}
+            aria-label={`Remove injury #${index + 1}`}
             className="flex items-center gap-1 text-sm text-red-600 hover:underline"
           >
             <i className="ti ti-trash" aria-hidden="true" />
@@ -43,18 +44,19 @@ export default function InjuryForm({ index, value, onChange, onRemove }: InjuryF
         )}
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Input icon="ti-id-badge-2" label="Accreditation No." {...field(value, update, "accreditationNo")} />
-        <Input icon="ti-run" label="Sport / Event" {...field(value, update, "sportEvent")} />
-        <Input icon="ti-flag-3" label="Round / Heat" {...field(value, update, "roundHeat")} />
-        <Input icon="ti-calendar-event" label="Injury Date" type="date" {...field(value, update, "injuryDate")} />
-        <Input icon="ti-clock" label="Injury Time" type="time" {...field(value, update, "injuryTime")} />
-        <Input icon="ti-bone" label="Body Part" {...field(value, update, "bodyPart")} />
-        <Input icon="ti-hash" label="Body Part Code" {...field(value, update, "bodyPartCode")} />
-        <Input icon="ti-bandage" label="Injury Type" {...field(value, update, "injuryType")} />
-        <Input icon="ti-hash" label="Injury Type Code" {...field(value, update, "injuryTypeCode")} />
-        <Input icon="ti-alert-triangle" label="Cause of Injury" {...field(value, update, "causeOfInjury")} />
-        <Input icon="ti-hash" label="Cause Code" {...field(value, update, "causeCode")} />
+        <Input id={`injury-${index}-accreditationNo`} icon="ti-id-badge-2" label="Accreditation No." {...field(value, update, "accreditationNo")} />
+        <Input id={`injury-${index}-sportEvent`} icon="ti-run" label="Sport / Event" {...field(value, update, "sportEvent")} />
+        <Input id={`injury-${index}-roundHeat`} icon="ti-flag-3" label="Round / Heat" {...field(value, update, "roundHeat")} />
+        <Input id={`injury-${index}-injuryDate`} icon="ti-calendar-event" label="Injury Date" type="date" {...field(value, update, "injuryDate")} />
+        <Input id={`injury-${index}-injuryTime`} icon="ti-clock" label="Injury Time" type="time" {...field(value, update, "injuryTime")} />
+        <Input id={`injury-${index}-bodyPart`} icon="ti-bone" label="Body Part" {...field(value, update, "bodyPart")} />
+        <Input id={`injury-${index}-bodyPartCode`} icon="ti-hash" label="Body Part Code" {...field(value, update, "bodyPartCode")} />
+        <Input id={`injury-${index}-injuryType`} icon="ti-bandage" label="Injury Type" {...field(value, update, "injuryType")} />
+        <Input id={`injury-${index}-injuryTypeCode`} icon="ti-hash" label="Injury Type Code" {...field(value, update, "injuryTypeCode")} />
+        <Input id={`injury-${index}-causeOfInjury`} icon="ti-alert-triangle" label="Cause of Injury" {...field(value, update, "causeOfInjury")} />
+        <Input id={`injury-${index}-causeCode`} icon="ti-hash" label="Cause Code" {...field(value, update, "causeCode")} />
         <Input
+          id={`injury-${index}-absenceDays`}
           icon="ti-calendar-x"
           label="Absence (days)"
           type="number"
@@ -69,12 +71,14 @@ export default function InjuryForm({ index, value, onChange, onRemove }: InjuryF
 }
 
 function Input({
+  id,
   icon,
   label,
   type = "text",
   value,
   onChange,
 }: {
+  id: string;
   icon: string;
   label: string;
   type?: string;
@@ -83,11 +87,12 @@ function Input({
 }) {
   return (
     <div>
-      <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+      <label htmlFor={id} className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
         <i className={`ti ${icon} text-slate-400`} aria-hidden="true" />
         {label}
       </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={onChange}

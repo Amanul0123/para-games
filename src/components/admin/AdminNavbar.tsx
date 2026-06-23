@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/admin/LogoutButton";
@@ -18,8 +19,14 @@ export default function AdminNavbar() {
   return (
     <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-white/60 bg-white/70 px-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] backdrop-blur-xl">
       <Link href="/admin/dashboard" className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-red to-orange-500 shadow-[0_4px_12px_rgba(224,58,24,0.4)]">
-          <i className="ti ti-wheelchair text-base text-white" aria-hidden="true" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-[0_4px_12px_rgba(224,58,24,0.4)]">
+          <Image
+            src="/Asian Paralympic Committee Emblem_PNG.png"
+            alt="Asian Paralympic Committee"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
+          />
         </div>
         <div className="text-sm font-medium leading-tight text-slate-800">
           APC Medical Portal

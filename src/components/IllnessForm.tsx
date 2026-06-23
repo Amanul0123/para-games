@@ -35,6 +35,7 @@ export default function IllnessForm({ index, value, onChange, onRemove }: Illnes
           <button
             type="button"
             onClick={onRemove}
+            aria-label={`Remove illness #${index + 1}`}
             className="flex items-center gap-1 text-sm text-red-600 hover:underline"
           >
             <i className="ti ti-trash" aria-hidden="true" />
@@ -43,17 +44,18 @@ export default function IllnessForm({ index, value, onChange, onRemove }: Illnes
         )}
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Input icon="ti-id-badge-2" label="Accreditation No." {...field(value, update, "accreditationNo")} />
-        <Input icon="ti-run" label="Sport / Event" {...field(value, update, "sportEvent")} />
-        <Input icon="ti-stethoscope" label="Diagnosis" {...field(value, update, "diagnosis")} />
-        <Input icon="ti-calendar-event" label="Occurred On" type="date" {...field(value, update, "occurredOn")} />
-        <Input icon="ti-lungs" label="Affected System" {...field(value, update, "affectedSystem")} />
-        <Input icon="ti-hash" label="System Code" {...field(value, update, "systemCode")} />
-        <Input icon="ti-thermometer" label="Main Symptoms" {...field(value, update, "mainSymptoms")} />
-        <Input icon="ti-hash" label="Symptom Codes" {...field(value, update, "symptomCodes")} />
-        <Input icon="ti-alert-triangle" label="Cause of Illness" {...field(value, update, "causeOfIllness")} />
-        <Input icon="ti-hash" label="Cause Code" {...field(value, update, "causeCode")} />
+        <Input id={`illness-${index}-accreditationNo`} icon="ti-id-badge-2" label="Accreditation No." {...field(value, update, "accreditationNo")} />
+        <Input id={`illness-${index}-sportEvent`} icon="ti-run" label="Sport / Event" {...field(value, update, "sportEvent")} />
+        <Input id={`illness-${index}-diagnosis`} icon="ti-stethoscope" label="Diagnosis" {...field(value, update, "diagnosis")} />
+        <Input id={`illness-${index}-occurredOn`} icon="ti-calendar-event" label="Occurred On" type="date" {...field(value, update, "occurredOn")} />
+        <Input id={`illness-${index}-affectedSystem`} icon="ti-lungs" label="Affected System" {...field(value, update, "affectedSystem")} />
+        <Input id={`illness-${index}-systemCode`} icon="ti-hash" label="System Code" {...field(value, update, "systemCode")} />
+        <Input id={`illness-${index}-mainSymptoms`} icon="ti-thermometer" label="Main Symptoms" {...field(value, update, "mainSymptoms")} />
+        <Input id={`illness-${index}-symptomCodes`} icon="ti-hash" label="Symptom Codes" {...field(value, update, "symptomCodes")} />
+        <Input id={`illness-${index}-causeOfIllness`} icon="ti-alert-triangle" label="Cause of Illness" {...field(value, update, "causeOfIllness")} />
+        <Input id={`illness-${index}-causeCode`} icon="ti-hash" label="Cause Code" {...field(value, update, "causeCode")} />
         <Input
+          id={`illness-${index}-absenceDays`}
           icon="ti-calendar-x"
           label="Absence (days)"
           type="number"
@@ -68,12 +70,14 @@ export default function IllnessForm({ index, value, onChange, onRemove }: Illnes
 }
 
 function Input({
+  id,
   icon,
   label,
   type = "text",
   value,
   onChange,
 }: {
+  id: string;
   icon: string;
   label: string;
   type?: string;
@@ -82,11 +86,12 @@ function Input({
 }) {
   return (
     <div>
-      <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+      <label htmlFor={id} className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
         <i className={`ti ${icon} text-slate-400`} aria-hidden="true" />
         {label}
       </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={onChange}

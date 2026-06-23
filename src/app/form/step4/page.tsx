@@ -65,30 +65,30 @@ export default function Step4Page() {
 
         <section className="rounded-xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <h4 className="mb-3 flex items-center gap-1.5 font-semibold text-slate-800">
-            <i className="ti ti-user text-slate-400" aria-hidden="true" />
+            <i className="ti ti-user text-slate-500" aria-hidden="true" />
             Reporter Information
           </h4>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <dt className="text-xs uppercase text-slate-400">NPC</dt>
+              <dt className="text-xs uppercase text-slate-500">NPC</dt>
               <dd className="text-slate-800">
                 {getNpcFlag(formData.step1.npc)} {formData.step1.npc}
               </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-slate-400">Reported By</dt>
+              <dt className="text-xs uppercase text-slate-500">Reported By</dt>
               <dd className="text-slate-800">{formData.step1.reportedBy}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-slate-400">Date of Report</dt>
+              <dt className="text-xs uppercase text-slate-500">Date of Report</dt>
               <dd className="text-slate-800">{formData.step1.dateOfReport}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-slate-400">Email</dt>
+              <dt className="text-xs uppercase text-slate-500">Email</dt>
               <dd className="text-slate-800">{formData.step1.email}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase text-slate-400">Phone</dt>
+              <dt className="text-xs uppercase text-slate-500">Phone</dt>
               <dd className="text-slate-800">{formData.step1.phone}</dd>
             </div>
           </dl>

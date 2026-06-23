@@ -56,12 +56,15 @@ export default function Step1Page() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+            <label htmlFor="npc" className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
               <i className="ti ti-flag text-slate-400" aria-hidden="true" />
               NPC
             </label>
             <select
+              id="npc"
               {...register("npc")}
+              aria-invalid={errors.npc ? true : undefined}
+              aria-describedby={errors.npc ? "npc-error" : undefined}
               className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
                 errors.npc ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
               }`}
@@ -73,40 +76,54 @@ export default function Step1Page() {
                 </option>
               ))}
             </select>
-            {errors.npc && <p className="mt-1 text-sm text-red-500">{errors.npc.message}</p>}
+            {errors.npc && (
+              <p id="npc-error" className="mt-1 text-sm text-red-500">
+                {errors.npc.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+            <label htmlFor="reportedBy" className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
               <i className="ti ti-id-badge-2 text-slate-400" aria-hidden="true" />
               Report by (name)
             </label>
             <input
+              id="reportedBy"
               {...register("reportedBy")}
               placeholder="Full name"
+              aria-invalid={errors.reportedBy ? true : undefined}
+              aria-describedby={errors.reportedBy ? "reportedBy-error" : undefined}
               className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
                 errors.reportedBy ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
               }`}
             />
             {errors.reportedBy && (
-              <p className="mt-1 text-sm text-red-500">{errors.reportedBy.message}</p>
+              <p id="reportedBy-error" className="mt-1 text-sm text-red-500">
+                {errors.reportedBy.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+            <label htmlFor="dateOfReport" className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
               <i className="ti ti-calendar-event text-slate-400" aria-hidden="true" />
               Date of report
             </label>
             <input
+              id="dateOfReport"
               type="date"
               {...register("dateOfReport")}
+              aria-invalid={errors.dateOfReport ? true : undefined}
+              aria-describedby={errors.dateOfReport ? "dateOfReport-error" : undefined}
               className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
                 errors.dateOfReport ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
               }`}
             />
             {errors.dateOfReport && (
-              <p className="mt-1 text-sm text-red-500">{errors.dateOfReport.message}</p>
+              <p id="dateOfReport-error" className="mt-1 text-sm text-red-500">
+                {errors.dateOfReport.message}
+              </p>
             )}
           </div>
 
@@ -116,19 +133,26 @@ export default function Step1Page() {
           </div>
 
           <div>
-            <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+            <label htmlFor="email" className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-700">
               <i className="ti ti-mail text-slate-400" aria-hidden="true" />
               Email
             </label>
             <input
+              id="email"
               type="email"
               {...register("email")}
               placeholder="name@example.com"
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={errors.email ? "email-error" : undefined}
               className={`w-full rounded-lg border bg-white/80 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-cyan/30 ${
                 errors.email ? "border-red-400" : "border-slate-200 focus:border-brand-cyan/60"
               }`}
             />
-            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
+            {errors.email && (
+              <p id="email-error" className="mt-1 text-sm text-red-500">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <Controller

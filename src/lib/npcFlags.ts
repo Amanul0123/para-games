@@ -47,3 +47,5 @@ const NPC_FLAGS: Record<string, string> = {
 export function getNpcFlag(npc: string): string {
   return NPC_FLAGS[npc] ?? "🏳️";
 }
+
+export const NPC_OPTIONS: string[] = Object.keys(NPC_FLAGS).sort();

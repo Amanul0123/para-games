@@ -1,91 +1,5 @@
 import { z } from "zod";
 
-export const step1Schema = z.object({
-  npc: z.string().min(1, "NPC is required"),
-  reportedBy: z.string().min(1, "Reported by is required"),
-  dateOfReport: z.string().min(1, "Date of report is required"),
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
-});
-
-export type Step1Input = z.infer<typeof step1Schema>;
-
-export const injurySchema = z.object({
-  accreditationNo: z.string().min(1, "Accreditation number is required"),
-  sportEvent: z.string().min(1, "Sport / event is required"),
-  roundHeat: z.string().optional(),
-  injuryDate: z.string().min(1, "Injury date is required"),
-  injuryTime: z.string().optional(),
-  bodyPart: z.string().min(1, "Body part is required"),
-  bodyPartCode: z.string().optional(),
-  injuryType: z.string().min(1, "Injury type is required"),
-  injuryTypeCode: z.string().optional(),
-  causeOfInjury: z.string().optional(),
-  causeCode: z.string().optional(),
-  absenceDays: z.coerce.number().optional(),
-});
-
-export type InjuryInput = z.infer<typeof injurySchema>;
-
-export const illnessSchema = z.object({
-  accreditationNo: z.string().min(1, "Accreditation number is required"),
-  sportEvent: z.string().min(1, "Sport / event is required"),
-  occurredOn: z.string().min(1, "Occurred on date is required"),
-  diagnosis: z.string().min(1, "Diagnosis is required"),
-  affectedSystem: z.string().optional(),
-  systemCode: z.string().optional(),
-  mainSymptoms: z.string().optional(),
-  symptomCodes: z.string().optional(),
-  causeOfIllness: z.string().optional(),
-  causeCode: z.string().optional(),
-  absenceDays: z.coerce.number().optional(),
-});
-
-export type IllnessInput = z.infer<typeof illnessSchema>;
-
-export const step2Schema = z.object({
-  injuries: z.array(injurySchema).default([]),
-  illnesses: z.array(illnessSchema).default([]),
-});
-
-export type Step2Input = z.infer<typeof step2Schema>;
-
-export const reportSubmitSchema = z.object({
-  step1: step1Schema,
-  injuries: z.array(injurySchema).default([]),
-  illnesses: z.array(illnessSchema).default([]),
-});
-
-export type ReportSubmitInput = z.infer<typeof reportSubmitSchema>;
-
-export const reportLookupSchema = z.object({
-  id: z.string().min(1, "Report ID is required"),
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-});
-
-export type ReportLookupInput = z.infer<typeof reportLookupSchema>;
-
-export const reportUpdateSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-  step1: step1Schema,
-  injuries: z.array(injurySchema).default([]),
-  illnesses: z.array(illnessSchema).default([]),
-});
-
-export type ReportUpdateInput = z.infer<typeof reportUpdateSchema>;
-
-export const reportStatusSchema = z.object({
-  status: z.enum(["submitted", "under_review", "resolved"]),
-});
-
-export type ReportStatusInput = z.infer<typeof reportStatusSchema>;
-
-export const reportNoteSchema = z.object({
-  message: z.string().min(1, "Note message is required"),
-});
-
-export type ReportNoteInput = z.infer<typeof reportNoteSchema>;
-
 export const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
@@ -105,3 +19,99 @@ export const changePasswordSchema = z
   });
 
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export const eventSettingsSchema = z.object({
+  eventName: z.string().min(1, "Event name is required"),
+  organizationName: z.string().min(1, "Organization name is required"),
+  startDate: z.string().optional().or(z.literal("")),
+  endDate: z.string().optional().or(z.literal("")),
+  logoUrl: z.string().optional().or(z.literal("")),
+});
+
+export type EventSettingsInput = z.infer<typeof eventSettingsSchema>;
+
+export const profileSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z.string().optional(),
+});
+
+export type ProfileInput = z.infer<typeof profileSchema>;
+
+// --- Admin: team provisioning ---
+
+export const teamCreateSchema = z.object({
+  npc: z.string().min(1, "NPC is required"),
+  name: z.string().min(1, "Team doctor name is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  phone: z.string().optional(),
+});
+
+export type TeamCreateInput = z.infer<typeof teamCreateSchema>;
+
+// --- Portal: athlete roster ---
+
+export const athleteSchema = z.object({
+  name: z.string().min(1, "Athlete name is required"),
+  accreditationNo: z.string().min(1, "Accreditation number is required"),
+  sport: z.string().optional(),
+});
+
+export type AthleteInput = z.infer<typeof athleteSchema>;
+
+// --- Portal: daily team size ---
+
+export const teamDaySchema = z.object({
+  date: z.string().min(1, "Date is required"),
+  athleteIds: z.array(z.string()).default([]),
+});
+
+export type TeamDayInput = z.infer<typeof teamDaySchema>;
+
+// --- Portal: injury / illness recording ---
+
+export const injurySchema = z.object({
+  athleteId: z.string().min(1, "Athlete is required"),
+  sportEvent: z.string().min(1, "Sport / event is required"),
+  injuryDate: z.string().min(1, "Injury date is required"),
+  bodyPart: z.string().min(1, "Body part is required"),
+  injuryType: z.string().min(1, "Injury type is required"),
+  causeOfInjury: z.string().optional(),
+  originalDaysLost: z.number().optional(),
+});
+
+export type InjuryInput = z.infer<typeof injurySchema>;
+
+export const illnessSchema = z.object({
+  athleteId: z.string().min(1, "Athlete is required"),
+  sportEvent: z.string().min(1, "Sport / event is required"),
+  occurredOn: z.string().min(1, "Occurred on date is required"),
+  diagnosis: z.string().min(1, "Diagnosis is required"),
+  affectedSystem: z.string().optional(),
+  mainSymptoms: z.string().optional(),
+  causeOfIllness: z.string().optional(),
+  originalDaysLost: z.number().optional(),
+});
+
+export type IllnessInput = z.infer<typeof illnessSchema>;
+
+// --- Time loss editing ---
+
+export const timeLossSchema = z.object({
+  editedDaysLost: z.coerce.number().min(0, "Days lost must be 0 or more"),
+});
+
+export type TimeLossInput = z.infer<typeof timeLossSchema>;
+
+// --- Admin: per-record status + notes ---
+
+export const recordStatusSchema = z.object({
+  status: z.enum(["logged", "under_review", "resolved"]),
+});
+
+export type RecordStatusInput = z.infer<typeof recordStatusSchema>;
+
+export const recordNoteSchema = z.object({
+  message: z.string().min(1, "Note message is required"),
+});
+
+export type RecordNoteInput = z.infer<typeof recordNoteSchema>;

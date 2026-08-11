@@ -10,8 +10,8 @@ export default function StatsGrid({ stats }: StatsGridProps) {
   const cards = [
     {
       icon: "ti-file-report",
-      value: stats.totalSubmissions,
-      label: "Total Submissions",
+      value: stats.totalTeams,
+      label: "Teams Reporting",
       glow: "from-brand-red/40 to-orange-500/10",
       iconColor: "text-brand-red",
     },

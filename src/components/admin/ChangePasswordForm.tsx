@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema, type ChangePasswordInput } from "@/lib/validations";
 
-export default function ChangePasswordForm() {
+export default function ChangePasswordForm({ endpoint = "/api/admin/profile" }: { endpoint?: string }) {
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(
     null,
   );
@@ -22,7 +22,7 @@ export default function ChangePasswordForm() {
   const onSubmit = async (data: ChangePasswordInput) => {
     setStatus(null);
     try {
-      const res = await fetch("/api/admin/profile", {
+      const res = await fetch(endpoint, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

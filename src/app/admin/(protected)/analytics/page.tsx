@@ -4,7 +4,7 @@ import TopNpcsCard from "@/components/admin/TopNpcsCard";
 import BreakdownCard from "@/components/admin/BreakdownCard";
 import StatsGrid from "@/components/admin/StatsGrid";
 import {
-  getReportsWithDetails,
+  getTeamsWithDetails,
   computeStats,
   computeTrend,
   computeBodyZones,
@@ -14,21 +14,21 @@ import {
 } from "@/lib/dashboardData";
 
 export default async function AdminAnalyticsPage() {
-  const reports = await getReportsWithDetails();
+  const teams = await getTeamsWithDetails();
 
-  const stats = computeStats(reports);
-  const trend = computeTrend(reports);
-  const bodyZones = computeBodyZones(reports);
-  const topNpcs = computeTopNpcs(reports, 8);
-  const injuryTypes = computeInjuryTypeBreakdown(reports);
-  const illnessSystems = computeIllnessSystemBreakdown(reports);
+  const stats = computeStats(teams);
+  const trend = computeTrend(teams);
+  const bodyZones = computeBodyZones(teams);
+  const topNpcs = computeTopNpcs(teams, 8);
+  const injuryTypes = computeInjuryTypeBreakdown(teams);
+  const illnessSystems = computeIllnessSystemBreakdown(teams);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
       <div className="mb-6">
         <h1 className="text-lg font-medium text-slate-800">Analytics</h1>
         <p className="mt-0.5 text-[13px] text-slate-500">
-          Trends and breakdowns across all submitted reports
+          Trends and breakdowns across all teams
         </p>
       </div>
 

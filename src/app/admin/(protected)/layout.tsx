@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import { getEventSettings } from "@/lib/eventSettings";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 
 export default async function AdminLayout({
@@ -10,9 +11,11 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session || (session.user as { role?: string })?.role !== "admin") {
     redirect("/admin/login");
   }
+
+  const { eventName, logoUrl } = await getEventSettings();
 
   return (
     <>
@@ -48,7 +51,7 @@ export default async function AdminLayout({
           Skip to main content
         </a>
         <div className="relative z-10">
-          <AdminNavbar />
+          <AdminNavbar eventName={eventName} logoUrl={logoUrl} />
           <main id="main-content">{children}</main>
         </div>
       </div>

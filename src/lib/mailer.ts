@@ -31,24 +31,30 @@ export async function sendEmail({ to, subject, html }: SendEmailInput) {
   }
 }
 
-export function buildMagicLinkEmail(link: string, npc: string) {
+export function buildTeamInviteEmail(
+  npc: string,
+  email: string,
+  tempPassword: string,
+  eventName = "Aichi Nagoya 2026 Asian Para Games",
+) {
+  const portalUrl = `${process.env.NEXTAUTH_URL ?? ""}/portal/login`;
   return {
-    subject: "Access your Asian Para Games medical report",
+    subject: `Your ${eventName} medical portal account`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
         <p>Hello,</p>
-        <p>Here is your secure link to view or edit your submitted medical report for <strong>${npc}</strong>:</p>
+        <p>An account has been created for <strong>${npc}</strong> on the ${eventName} medical reporting portal.</p>
+        <p style="margin: 20px 0; padding: 16px; background: #f4f6f8; border-radius: 8px;">
+          Email: <strong>${email}</strong><br />
+          Temporary password: <strong>${tempPassword}</strong>
+        </p>
         <p style="margin: 20px 0;">
-          <a href="${link}" style="background:#00BCD4;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;">
-            View / Edit My Report
+          <a href="${portalUrl}" style="background:#00BCD4;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;">
+            Log In to the Portal
           </a>
         </p>
         <p style="font-size: 13px; color: #888;">
-          Or copy this link into your browser:<br />
-          <a href="${link}">${link}</a>
-        </p>
-        <p style="font-size: 13px; color: #888;">
-          This link expires in 30 days. If you didn't submit this report, you can ignore this email.
+          You'll be asked to set a new password the first time you log in.
         </p>
       </div>
     `,

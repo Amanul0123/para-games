@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { getEventSettings } from "@/lib/eventSettings";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Aichi Nagoya 2026 Asian Para Games - Report on Injuries and Illnesses",
-  description:
-    "Report on Injuries and Illnesses for the Aichi Nagoya 2026 Asian Para Games - Asian Paralympic Committee",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { eventName, organizationName } = await getEventSettings();
+  return {
+    title: `${eventName} - Report on Injuries and Illnesses`,
+    description: `Report on Injuries and Illnesses for the ${eventName} - ${organizationName}`,
+  };
+}
 
 export default function RootLayout({
   children,
@@ -21,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

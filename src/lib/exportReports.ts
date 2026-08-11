@@ -1,55 +1,44 @@
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { ReportSummary, InjuryEntry, IllnessEntry, Step1Data } from "@/types";
+import { TeamSummary, AthleteEntry, InjuryRecord, IllnessRecord } from "@/types";
 
-const COLUMNS = [
-  "NPC",
-  "Reported By",
-  "Date",
-  "Email",
-  "Phone",
-  "Injuries",
-  "Illnesses",
-  "Status",
-] as const;
+const TEAM_COLUMNS = ["NPC", "Team Doctor", "Email", "Athletes", "Injuries", "Illnesses"] as const;
 
-function toRows(reports: ReportSummary[]) {
-  return reports.map((report) => [
-    report.npc,
-    report.reportedBy,
-    new Date(report.dateOfReport).toLocaleDateString("en-US"),
-    report.email,
-    report.phone,
-    report.injuryCount,
-    report.illnessCount,
-    report.status,
+function toTeamRows(teams: TeamSummary[]) {
+  return teams.map((team) => [
+    team.npc,
+    team.name,
+    team.email,
+    team.athleteCount,
+    team.injuryCount,
+    team.illnessCount,
   ]);
 }
 
-export function exportReportsToExcel(reports: ReportSummary[], fileName = "para-games-reports") {
-  const rows = toRows(reports);
-  const sheetData: (string | number)[][] = [[...COLUMNS], ...rows];
+export function exportTeamsToExcel(teams: TeamSummary[], fileName = "para-games-teams") {
+  const rows = toTeamRows(teams);
+  const sheetData: (string | number)[][] = [[...TEAM_COLUMNS], ...rows];
 
   const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-  worksheet["!cols"] = COLUMNS.map(() => ({ wch: 18 }));
+  worksheet["!cols"] = TEAM_COLUMNS.map(() => ({ wch: 18 }));
 
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Reports");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Teams");
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
 }
 
-export function exportReportsToPdf(reports: ReportSummary[], fileName = "para-games-reports") {
+export function exportTeamsToPdf(teams: TeamSummary[], fileName = "para-games-teams") {
   const doc = new jsPDF({ orientation: "landscape" });
 
   doc.setFontSize(14);
   doc.text("Aichi Nagoya 2026 Asian Para Games", 14, 15);
   doc.setFontSize(10);
-  doc.text("Report on Injuries and Illnesses - Submissions Export", 14, 21);
+  doc.text("Report on Injuries and Illnesses - Teams Export", 14, 21);
 
   autoTable(doc, {
-    head: [[...COLUMNS]],
-    body: toRows(reports),
+    head: [[...TEAM_COLUMNS]],
+    body: toTeamRows(teams),
     startY: 28,
     styles: { fontSize: 8 },
     headStyles: { fillColor: [224, 58, 24] },
@@ -58,18 +47,67 @@ export function exportReportsToPdf(reports: ReportSummary[], fileName = "para-ga
   doc.save(`${fileName}.pdf`);
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  submitted: "New",
-  under_review: "Under Review",
-  resolved: "Resolved",
-};
+const INJURY_COLUMNS = ["Athlete", "Sport / Event", "Date", "Body Part", "Type", "Cause", "Days Lost", "Status"] as const;
+const ILLNESS_COLUMNS = ["Athlete", "Sport / Event", "Occurred On", "Diagnosis", "System", "Cause", "Days Lost", "Status"] as const;
 
-export function exportReportDetailToPdf(report: {
-  id: string;
-  status: string;
-  step1: Step1Data;
-  injuries: InjuryEntry[];
-  illnesses: IllnessEntry[];
+function toInjuryRows(injuries: InjuryRecord[]) {
+  return injuries.map((i) => [
+    i.athleteName,
+    i.sportEvent,
+    i.injuryDate,
+    i.bodyPart,
+    i.injuryType,
+    i.causeOfInjury ?? "-",
+    i.editedDaysLost ?? i.originalDaysLost ?? "-",
+    i.status,
+  ]);
+}
+
+function toIllnessRows(illnesses: IllnessRecord[]) {
+  return illnesses.map((i) => [
+    i.athleteName,
+    i.sportEvent,
+    i.occurredOn,
+    i.diagnosis,
+    i.affectedSystem ?? "-",
+    i.causeOfIllness ?? "-",
+    i.editedDaysLost ?? i.originalDaysLost ?? "-",
+    i.status,
+  ]);
+}
+
+/** Team-scoped export used by the portal's own "Download All/Injuries/Illness" buttons. */
+export function exportTeamRecordsToExcel(
+  injuries: InjuryRecord[],
+  illnesses: IllnessRecord[],
+  fileName = "my-team-records",
+) {
+  const workbook = XLSX.utils.book_new();
+
+  if (injuries.length > 0) {
+    const sheet = XLSX.utils.aoa_to_sheet([[...INJURY_COLUMNS], ...toInjuryRows(injuries)]);
+    sheet["!cols"] = INJURY_COLUMNS.map(() => ({ wch: 16 }));
+    XLSX.utils.book_append_sheet(workbook, sheet, "Injuries");
+  }
+  if (illnesses.length > 0) {
+    const sheet = XLSX.utils.aoa_to_sheet([[...ILLNESS_COLUMNS], ...toIllnessRows(illnesses)]);
+    sheet["!cols"] = ILLNESS_COLUMNS.map(() => ({ wch: 16 }));
+    XLSX.utils.book_append_sheet(workbook, sheet, "Illnesses");
+  }
+  if (injuries.length === 0 && illnesses.length === 0) {
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([["No records yet"]]), "Injuries");
+  }
+
+  XLSX.writeFile(workbook, `${fileName}.xlsx`);
+}
+
+export function exportTeamDetailToPdf(team: {
+  npc: string;
+  name: string;
+  email: string;
+  athletes: AthleteEntry[];
+  injuries: InjuryRecord[];
+  illnesses: IllnessRecord[];
 }) {
   const doc = new jsPDF({ orientation: "landscape" });
 
@@ -82,57 +120,33 @@ export function exportReportDetailToPdf(report: {
     startY: 28,
     styles: { fontSize: 8 },
     headStyles: { fillColor: [24, 95, 165] },
-    head: [["NPC", "Reported By", "Date", "Email", "Phone", "Status"]],
-    body: [
-      [
-        report.step1.npc,
-        report.step1.reportedBy,
-        new Date(report.step1.dateOfReport).toLocaleDateString("en-US"),
-        report.step1.email,
-        report.step1.phone,
-        STATUS_LABELS[report.status] ?? report.status,
-      ],
-    ],
+    head: [["NPC", "Team Doctor", "Email", "Athletes"]],
+    body: [[team.npc, team.name, team.email, team.athletes.length]],
   });
 
   let nextY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
 
   doc.setFontSize(11);
-  doc.text(`Injuries (${report.injuries.length})`, 14, nextY);
+  doc.text(`Injuries (${team.injuries.length})`, 14, nextY);
   autoTable(doc, {
     startY: nextY + 4,
     styles: { fontSize: 8 },
     headStyles: { fillColor: [224, 58, 24] },
-    head: [["Accreditation", "Sport / Event", "Date", "Body Part", "Type", "Cause", "Absence"]],
-    body: report.injuries.map((injury) => [
-      injury.accreditationNo,
-      injury.sportEvent,
-      injury.injuryDate,
-      injury.bodyPart,
-      injury.injuryType,
-      injury.causeOfInjury ?? "-",
-      injury.absenceDays ?? "-",
-    ]),
+    head: [[...INJURY_COLUMNS]],
+    body: toInjuryRows(team.injuries),
   });
 
   nextY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
 
   doc.setFontSize(11);
-  doc.text(`Illnesses (${report.illnesses.length})`, 14, nextY);
+  doc.text(`Illnesses (${team.illnesses.length})`, 14, nextY);
   autoTable(doc, {
     startY: nextY + 4,
     styles: { fontSize: 8 },
     headStyles: { fillColor: [186, 117, 23] },
-    head: [["Accreditation", "Sport / Event", "Diagnosis", "Occurred On", "System", "Absence"]],
-    body: report.illnesses.map((illness) => [
-      illness.accreditationNo,
-      illness.sportEvent,
-      illness.diagnosis,
-      illness.occurredOn,
-      illness.affectedSystem ?? "-",
-      illness.absenceDays ?? "-",
-    ]),
+    head: [[...ILLNESS_COLUMNS]],
+    body: toIllnessRows(team.illnesses),
   });
 
-  doc.save(`para-games-report-${report.id.slice(0, 8)}.pdf`);
+  doc.save(`para-games-team-${team.npc.replace(/\s+/g, "-").toLowerCase()}.pdf`);
 }

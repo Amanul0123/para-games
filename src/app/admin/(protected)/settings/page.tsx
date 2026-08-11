@@ -1,15 +1,27 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getEventSettings } from "@/lib/eventSettings";
 import ChangePasswordForm from "@/components/admin/ChangePasswordForm";
+import EventSettingsForm from "@/components/admin/EventSettingsForm";
 
 export default async function AdminSettingsPage() {
   const session = await getServerSession(authOptions);
+  const eventSettings = await getEventSettings();
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
       <div className="mb-6">
         <h1 className="text-lg font-medium text-slate-800">Settings</h1>
-        <p className="mt-0.5 text-[13px] text-slate-500">Manage your admin account</p>
+        <p className="mt-0.5 text-[13px] text-slate-500">Manage your admin account and event branding</p>
+      </div>
+
+      <div className="mb-6 overflow-hidden rounded-xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+        <h2 className="mb-3 text-sm font-medium text-slate-800">Event Branding</h2>
+        <p className="mb-4 text-xs text-slate-500">
+          This controls the event name, organization name, dates, and logo shown across the whole
+          site &mdash; login pages, navigation, and dashboard headers.
+        </p>
+        <EventSettingsForm initial={eventSettings} />
       </div>
 
       <div className="mb-6 overflow-hidden rounded-xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">

@@ -17,7 +17,7 @@ export default async function AdminLoginPage() {
       />
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50 px-4">
         <div
-          className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-brand-red/25 blur-[140px]"
+          className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#e2264a]/25 blur-[140px]"
           aria-hidden="true"
         />
         <div
@@ -49,7 +49,7 @@ export default async function AdminLoginPage() {
                 <BrandLogo logoUrl={logoUrl} alt={eventName} />
               </div>
               <h1 className="text-center text-lg font-semibold text-slate-800">
-                APC Medical Portal
+                Injuries and Illness
               </h1>
               <LoginSubtitle eventName={eventName} variant="admin" />
             </div>

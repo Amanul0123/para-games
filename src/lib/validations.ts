@@ -33,6 +33,7 @@ export type EventSettingsInput = z.infer<typeof eventSettingsSchema>;
 export const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string().optional(),
+  designation: z.string().min(1, "Please select your professional designation"),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;

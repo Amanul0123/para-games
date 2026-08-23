@@ -19,6 +19,7 @@ type DictKey =
   | "nav.editTimeLoss"
   | "nav.reports"
   | "nav.myProfile"
+  | "nav.codesReference"
   | "common.logout"
   | "login.email"
   | "login.password"
@@ -32,7 +33,7 @@ type DictKey =
   | "portal.welcome";
 
 export const DICTIONARY: Record<DictKey, Record<Locale, string>> = {
-  "brand.portalName": { en: "APC Medical Portal", ar: "بوابة اللجنة الطبية" },
+  "brand.portalName": { en: "Injuries and Illness", ar: "بوابة اللجنة الطبية" },
   "nav.dashboard": { en: "Dashboard", ar: "لوحة التحكم" },
   "nav.teams": { en: "Teams", ar: "الفرق" },
   "nav.athletes": { en: "Athletes", ar: "الرياضيون" },
@@ -45,6 +46,7 @@ export const DICTIONARY: Record<DictKey, Record<Locale, string>> = {
   "nav.editTimeLoss": { en: "Edit Time Loss", ar: "تعديل مدة الغياب" },
   "nav.reports": { en: "Reports", ar: "التقارير" },
   "nav.myProfile": { en: "My Profile", ar: "الملف الشخصي" },
+  "nav.codesReference": { en: "Codes Reference", ar: "دليل الرموز" },
   "common.logout": { en: "Logout", ar: "تسجيل الخروج" },
   "login.email": { en: "Email", ar: "البريد الإلكتروني" },
   "login.password": { en: "Password", ar: "كلمة المرور" },

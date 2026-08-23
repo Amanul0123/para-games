@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { injurySchema, type InjuryInput } from "@/lib/validations";
 import { AthleteEntry, InjuryRecord } from "@/types";
+import { BODY_REGIONS, INJURY_TYPES, INJURY_CAUSES } from "@/lib/injuryIllnessCodes";
 
 export default function InjuryEntryForm({
   date,
@@ -19,12 +21,16 @@ export default function InjuryEntryForm({
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<InjuryInput>({
     resolver: zodResolver(injurySchema),
     defaultValues: { injuryDate: date },
   });
+
+  const [bodyRegion, setBodyRegion] = useState("");
+  const regionParts = BODY_REGIONS.find((r) => r.label === bodyRegion)?.parts ?? [];
 
   const onSubmit = async (data: InjuryInput) => {
     try {
@@ -74,14 +80,71 @@ export default function InjuryEntryForm({
         <Field label="Sport / Event" error={errors.sportEvent?.message}>
           <input {...register("sportEvent")} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
         </Field>
+        <Field label="Body Region">
+          <select
+            value={bodyRegion}
+            onChange={(e) => {
+              setBodyRegion(e.target.value);
+              setValue("bodyPart", "", { shouldValidate: true });
+            }}
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="" disabled>
+              Select region
+            </option>
+            {BODY_REGIONS.map((r) => (
+              <option key={r.label} value={r.label}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </Field>
         <Field label="Body Part" error={errors.bodyPart?.message}>
-          <input {...register("bodyPart")} placeholder="e.g. shoulder, knee" className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
+          <select
+            {...register("bodyPart")}
+            defaultValue=""
+            disabled={!bodyRegion}
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none disabled:bg-slate-50 disabled:text-slate-400"
+          >
+            <option value="" disabled>
+              {bodyRegion ? "Select part" : "Select a region first"}
+            </option>
+            {regionParts.map((p) => (
+              <option key={p.code} value={p.label}>
+                {p.code} — {p.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Injury Type" error={errors.injuryType?.message}>
-          <input {...register("injuryType")} placeholder="e.g. sprain, fracture" className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
+          <select
+            {...register("injuryType")}
+            defaultValue=""
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="" disabled>
+              Select injury type
+            </option>
+            {INJURY_TYPES.map((t) => (
+              <option key={t.code} value={t.label}>
+                {t.code} — {t.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Cause of Injury (optional)">
-          <input {...register("causeOfInjury")} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
+          <select
+            {...register("causeOfInjury")}
+            defaultValue=""
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="">Select cause (optional)</option>
+            {INJURY_CAUSES.map((c) => (
+              <option key={c.code} value={c.label}>
+                {c.code} — {c.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Days Lost (optional)">
           <input

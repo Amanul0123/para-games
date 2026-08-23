@@ -14,13 +14,14 @@ const NAV_ITEMS = [
   { href: "/portal/recorded", icon: "ti-list", key: "nav.recordedData" as const },
   { href: "/portal/time-loss", icon: "ti-clock-edit", key: "nav.editTimeLoss" as const },
   { href: "/portal/reports", icon: "ti-file-report", key: "nav.reports" as const },
+  { href: "/portal/codes", icon: "ti-list-numbers", key: "nav.codesReference" as const },
   { href: "/portal/profile", icon: "ti-user", key: "nav.myProfile" as const },
 ];
 
 export default function PortalNavbar({
   npc,
   logoUrl,
-  eventName = "APC Medical Portal",
+  eventName = "Injuries and Illness",
 }: {
   npc?: string;
   logoUrl?: string | null;

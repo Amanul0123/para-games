@@ -21,7 +21,7 @@ export default async function PortalProfilePage() {
       <div className="space-y-6">
         <div className="rounded-xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <h2 className="mb-4 text-sm font-medium text-slate-800">Details</h2>
-          <PortalProfileForm name={team?.name ?? ""} phone={team?.phone} />
+          <PortalProfileForm name={team?.name ?? ""} phone={team?.phone} designation={team?.designation} />
         </div>
 
         <div className="rounded-xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">

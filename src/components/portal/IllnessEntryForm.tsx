@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { illnessSchema, type IllnessInput } from "@/lib/validations";
 import { AthleteEntry, IllnessRecord } from "@/types";
+import { AFFECTED_SYSTEMS, MAIN_SYMPTOMS, ILLNESS_CAUSES } from "@/lib/injuryIllnessCodes";
 
 export default function IllnessEntryForm({
   date,
@@ -26,12 +28,24 @@ export default function IllnessEntryForm({
     defaultValues: { occurredOn: date },
   });
 
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+
+  const toggleSymptom = (label: string) => {
+    setSelectedSymptoms((prev) =>
+      prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label]
+    );
+  };
+
   const onSubmit = async (data: IllnessInput) => {
     try {
       const res = await fetch("/api/portal/illnesses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, occurredOn: date }),
+        body: JSON.stringify({
+          ...data,
+          mainSymptoms: selectedSymptoms.length ? selectedSymptoms.join(", ") : undefined,
+          occurredOn: date,
+        }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
@@ -78,14 +92,49 @@ export default function IllnessEntryForm({
           <input {...register("diagnosis")} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
         </Field>
         <Field label="Affected System (optional)">
-          <input {...register("affectedSystem")} placeholder="e.g. respiratory, GI" className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
-        </Field>
-        <Field label="Main Symptoms (optional)">
-          <input {...register("mainSymptoms")} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
+          <select
+            {...register("affectedSystem")}
+            defaultValue=""
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="">Select system (optional)</option>
+            {AFFECTED_SYSTEMS.map((s) => (
+              <option key={s.code} value={s.label}>
+                {s.code} — {s.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Cause (optional)">
-          <input {...register("causeOfIllness")} placeholder="e.g. infection" className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none" />
+          <select
+            {...register("causeOfIllness")}
+            defaultValue=""
+            className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+          >
+            <option value="">Select cause (optional)</option>
+            {ILLNESS_CAUSES.map((c) => (
+              <option key={c.code} value={c.label}>
+                {c.code} — {c.label}
+              </option>
+            ))}
+          </select>
         </Field>
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs font-medium text-slate-600">Main Symptom(s) (optional)</label>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 rounded-md border border-slate-200 bg-white p-2.5 sm:grid-cols-3">
+            {MAIN_SYMPTOMS.map((s) => (
+              <label key={s.code} className="flex items-center gap-1.5 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={selectedSymptoms.includes(s.label)}
+                  onChange={() => toggleSymptom(s.label)}
+                  className="rounded border-slate-300 text-brand-cyan focus:ring-brand-cyan/60"
+                />
+                {s.code} — {s.label}
+              </label>
+            ))}
+          </div>
+        </div>
         <Field label="Days Lost (optional)">
           <input
             type="number"

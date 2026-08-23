@@ -22,7 +22,7 @@ async function shot(name) {
 
 console.log("== Admin login ==");
 await page.goto(`${BASE}/admin/login`, { waitUntil: "networkidle" });
-await page.waitForSelector("text=APC Medical Portal");
+await page.waitForSelector("text=Injuries and Illness");
 await shot("01-admin-login");
 
 console.log("== Reporting wizard step1 ==");

@@ -52,7 +52,7 @@ export async function PATCH(request: NextRequest) {
 
   await prisma.teamUser.update({
     where: { id: teamUserId },
-    data: { name: parsed.data.name, phone: parsed.data.phone },
+    data: { name: parsed.data.name, phone: parsed.data.phone, designation: parsed.data.designation },
   });
 
   return NextResponse.json({ success: true });

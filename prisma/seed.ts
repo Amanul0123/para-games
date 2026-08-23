@@ -51,6 +51,9 @@ const DEMO_TEAMS: DemoTeam[] = [
       { name: "Rashid Al Falasi", accreditationNo: "UAE005", sport: "Wheelchair Basketball" },
     ],
     records: [
+      // F-MARC 2009 "Daily Report on Injuries and Illnesses" — official worked examples (page 1)
+      { daysAgo: 11, athleteIndex: 0, kind: "injury", sportEvent: "Athletics, 100m (women)", bodyPart: "Wrist", injuryType: "Sprain", causeOfInjury: "Field of play conditions", originalDaysLost: 10 },
+      { daysAgo: 11, athleteIndex: 1, kind: "illness", sportEvent: "Football (men)", diagnosis: "Tonsillitis, cold", affectedSystem: "Respiratory / ear, nose, throat", mainSymptoms: "Fever, Pain", causeOfIllness: "Infection", originalDaysLost: 2 },
       { daysAgo: 0, athleteIndex: 3, kind: "illness", sportEvent: "Training - Table Tennis", diagnosis: "Gastroenteritis", affectedSystem: "gastrointestinal", mainSymptoms: "nausea, cramps", causeOfIllness: "infection", originalDaysLost: 2 },
       { daysAgo: 1, athleteIndex: 0, kind: "injury", sportEvent: "100m sprint", bodyPart: "hamstring", injuryType: "strain", causeOfInjury: "overuse", originalDaysLost: 5, editedDaysLost: 3, status: "under_review" },
       { daysAgo: 2, athleteIndex: 4, kind: "injury", sportEvent: "Wheelchair Basketball match", bodyPart: "shoulder", injuryType: "tendinitis", causeOfInjury: "overuse", originalDaysLost: 7 },

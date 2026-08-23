@@ -14,6 +14,7 @@ model TeamUser {
   name              String
   npc               String
   phone             String?
+  designation       String?
   mustResetPassword Boolean   @default(true)
   createdAt         DateTime  @default(now())
   athletes          Athlete[]

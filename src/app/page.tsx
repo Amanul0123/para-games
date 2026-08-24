@@ -20,7 +20,7 @@ export default async function HomePage() {
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-[0_10px_25px_-5px_rgba(224,58,24,0.5)]">
           <BrandLogo logoUrl={logoUrl} alt={eventName} />
         </div>
-        <h1 className="text-lg font-semibold text-slate-800">Injuries and Illness</h1>
+        <h1 className="text-lg font-semibold text-slate-800">Injuries and Illness Surveillance Portal</h1>
         <p className="mt-1 text-sm text-slate-500">{eventName}</p>
 
         <LandingButtons />

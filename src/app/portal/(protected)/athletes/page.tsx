@@ -28,7 +28,8 @@ export default async function PortalAthletesPage() {
       <div className="mb-6">
         <h1 className="text-lg font-medium text-slate-800">My Athletes</h1>
         <p className="mt-0.5 text-[13px] text-slate-500">
-          Your team&apos;s athlete roster, used when recording daily team size and injuries/illnesses
+          Your team&apos;s athlete roster, managed by your event admin and used when recording daily
+          team size and injuries/illnesses
         </p>
       </div>
 

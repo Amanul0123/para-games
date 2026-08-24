@@ -1,28 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-interface InjuryRow {
-  id: string;
-  athleteName: string;
-  date: string;
-  bodyPart: string;
-  injuryType: string;
-  causeOfInjury: string | null;
-  daysLost: number | string;
-  status: string;
-}
-
-interface IllnessRow {
-  id: string;
-  athleteName: string;
-  date: string;
-  diagnosis: string;
-  affectedSystem: string | null;
-  causeOfIllness: string | null;
-  daysLost: number | string;
-  status: string;
-}
+import { AthleteEntry, InjuryRecord, IllnessRecord } from "@/types";
+import EditInjuryModal from "@/components/portal/EditInjuryModal";
+import EditIllnessModal from "@/components/portal/EditIllnessModal";
 
 const STATUS_OPTIONS = [
   { value: "", label: "All statuses" },
@@ -42,12 +23,19 @@ function statusLabel(status: string) {
 }
 
 export default function RecordedDataView({
-  injuries,
-  illnesses,
+  athletes,
+  injuries: initialInjuries,
+  illnesses: initialIllnesses,
 }: {
-  injuries: InjuryRow[];
-  illnesses: IllnessRow[];
+  athletes: AthleteEntry[];
+  injuries: InjuryRecord[];
+  illnesses: IllnessRecord[];
 }) {
+  const [injuries, setInjuries] = useState(initialInjuries);
+  const [illnesses, setIllnesses] = useState(initialIllnesses);
+  const [editingInjury, setEditingInjury] = useState<InjuryRecord | null>(null);
+  const [editingIllness, setEditingIllness] = useState<IllnessRecord | null>(null);
+
   const [search, setSearch] = useState("");
   const [athlete, setAthlete] = useState("");
   const [status, setStatus] = useState("");
@@ -68,7 +56,7 @@ export default function RecordedDataView({
       if (athlete && i.athleteName !== athlete) return false;
       if (status && i.status !== status) return false;
       if (!q) return true;
-      return [i.athleteName, i.bodyPart, i.injuryType, i.causeOfInjury ?? "", i.date]
+      return [i.athleteName, i.bodyPart, i.injuryType, i.causeOfInjury ?? "", i.injuryDate]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -81,7 +69,7 @@ export default function RecordedDataView({
       if (athlete && i.athleteName !== athlete) return false;
       if (status && i.status !== status) return false;
       if (!q) return true;
-      return [i.athleteName, i.diagnosis, i.affectedSystem ?? "", i.causeOfIllness ?? "", i.date]
+      return [i.athleteName, i.diagnosis, i.affectedSystem ?? "", i.causeOfIllness ?? "", i.occurredOn]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -175,22 +163,33 @@ export default function RecordedDataView({
                 <Th>Type</Th>
                 <Th>Days Lost</Th>
                 <Th>Status</Th>
+                <Th />
               </tr>
             </thead>
             <tbody>
               {filteredInjuries.map((i) => (
                 <tr key={i.id} className="border-t border-slate-200/70">
                   <td className="px-4 py-2.5 text-slate-800">{i.athleteName}</td>
-                  <td className="px-4 py-2.5 text-xs text-slate-500">{i.date}</td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">{i.injuryDate}</td>
                   <td className="px-4 py-2.5 text-slate-600">{i.bodyPart}</td>
                   <td className="px-4 py-2.5 text-slate-600">{i.injuryType}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{i.daysLost}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{i.editedDaysLost ?? i.originalDaysLost ?? "—"}</td>
                   <td className="px-4 py-2.5 text-xs text-slate-500">{statusLabel(i.status)}</td>
+                  <td className="px-4 py-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setEditingInjury(i)}
+                      className="flex items-center gap-1 text-xs text-slate-500 hover:text-brand-cyan"
+                    >
+                      <i className="ti ti-pencil text-[13px]" aria-hidden="true" />
+                      Edit
+                    </button>
+                  </td>
                 </tr>
               ))}
               {filteredInjuries.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-sm text-slate-500">
+                  <td colSpan={7} className="px-4 py-6 text-center text-sm text-slate-500">
                     {injuries.length === 0 ? "No injuries recorded yet." : "No injuries match your filters."}
                   </td>
                 </tr>
@@ -218,22 +217,33 @@ export default function RecordedDataView({
                 <Th>System</Th>
                 <Th>Days Lost</Th>
                 <Th>Status</Th>
+                <Th />
               </tr>
             </thead>
             <tbody>
               {filteredIllnesses.map((i) => (
                 <tr key={i.id} className="border-t border-slate-200/70">
                   <td className="px-4 py-2.5 text-slate-800">{i.athleteName}</td>
-                  <td className="px-4 py-2.5 text-xs text-slate-500">{i.date}</td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">{i.occurredOn}</td>
                   <td className="px-4 py-2.5 text-slate-600">{i.diagnosis}</td>
                   <td className="px-4 py-2.5 text-slate-600">{i.affectedSystem || "—"}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{i.daysLost}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{i.editedDaysLost ?? i.originalDaysLost ?? "—"}</td>
                   <td className="px-4 py-2.5 text-xs text-slate-500">{statusLabel(i.status)}</td>
+                  <td className="px-4 py-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setEditingIllness(i)}
+                      className="flex items-center gap-1 text-xs text-slate-500 hover:text-brand-cyan"
+                    >
+                      <i className="ti ti-pencil text-[13px]" aria-hidden="true" />
+                      Edit
+                    </button>
+                  </td>
                 </tr>
               ))}
               {filteredIllnesses.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-sm text-slate-500">
+                  <td colSpan={7} className="px-4 py-6 text-center text-sm text-slate-500">
                     {illnesses.length === 0 ? "No illnesses recorded yet." : "No illnesses match your filters."}
                   </td>
                 </tr>
@@ -242,11 +252,35 @@ export default function RecordedDataView({
           </table>
         </div>
       )}
+
+      {editingInjury && (
+        <EditInjuryModal
+          record={editingInjury}
+          athletes={athletes}
+          onClose={() => setEditingInjury(null)}
+          onSaved={(updated) => {
+            setInjuries((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+            setEditingInjury(null);
+          }}
+        />
+      )}
+
+      {editingIllness && (
+        <EditIllnessModal
+          record={editingIllness}
+          athletes={athletes}
+          onClose={() => setEditingIllness(null)}
+          onSaved={(updated) => {
+            setIllnesses((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+            setEditingIllness(null);
+          }}
+        />
+      )}
     </div>
   );
 }
 
-function Th({ children }: { children: React.ReactNode }) {
+function Th({ children }: { children?: React.ReactNode }) {
   return (
     <th scope="col" className="px-4 py-2.5 text-[11px] font-medium uppercase tracking-wide text-slate-500">
       {children}

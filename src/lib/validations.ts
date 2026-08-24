@@ -45,6 +45,15 @@ export const teamCreateSchema = z.object({
   name: z.string().min(1, "Team doctor name is required"),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
   phone: z.string().optional(),
+  athletes: z
+    .array(
+      z.object({
+        name: z.string().min(1, "Athlete name is required"),
+        accreditationNo: z.string().min(1, "Accreditation number is required"),
+        sport: z.string().optional(),
+      }),
+    )
+    .optional(),
 });
 
 export type TeamCreateInput = z.infer<typeof teamCreateSchema>;
@@ -82,6 +91,9 @@ export const injurySchema = z.object({
 
 export type InjuryInput = z.infer<typeof injurySchema>;
 
+export const injuryEditSchema = injurySchema.omit({ injuryDate: true });
+export type InjuryEditInput = z.infer<typeof injuryEditSchema>;
+
 export const illnessSchema = z.object({
   athleteId: z.string().min(1, "Athlete is required"),
   sportEvent: z.string().min(1, "Sport / event is required"),
@@ -94,6 +106,9 @@ export const illnessSchema = z.object({
 });
 
 export type IllnessInput = z.infer<typeof illnessSchema>;
+
+export const illnessEditSchema = illnessSchema.omit({ occurredOn: true });
+export type IllnessEditInput = z.infer<typeof illnessEditSchema>;
 
 // --- Time loss editing ---
 

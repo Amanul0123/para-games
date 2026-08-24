@@ -102,7 +102,7 @@ export default async function AdminTeamDetailPage({
         <p className="mt-1 text-sm text-slate-500">{team.email}</p>
       </div>
 
-      <TeamDetail athletes={athletes} injuries={injuries} illnesses={illnesses} />
+      <TeamDetail teamId={team.id} athletes={athletes} injuries={injuries} illnesses={illnesses} />
     </div>
   );
 }

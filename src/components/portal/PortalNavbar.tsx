@@ -4,18 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/admin/LogoutButton";
 import BrandLogo from "@/components/BrandLogo";
-import LanguageToggle from "@/components/LanguageToggle";
-import { useLanguage } from "@/context/LanguageContext";
 
 const NAV_ITEMS = [
-  { href: "/portal", icon: "ti-home", key: "nav.home" as const },
-  { href: "/portal/athletes", icon: "ti-users", key: "nav.myAthletes" as const },
-  { href: "/portal/record", icon: "ti-calendar", key: "nav.myCalendar" as const },
-  { href: "/portal/recorded", icon: "ti-list", key: "nav.recordedData" as const },
-  { href: "/portal/time-loss", icon: "ti-clock-edit", key: "nav.editTimeLoss" as const },
-  { href: "/portal/reports", icon: "ti-file-report", key: "nav.reports" as const },
-  { href: "/portal/codes", icon: "ti-list-numbers", key: "nav.codesReference" as const },
-  { href: "/portal/profile", icon: "ti-user", key: "nav.myProfile" as const },
+  { href: "/portal", icon: "ti-home", label: "Home" },
+  { href: "/portal/athletes", icon: "ti-users", label: "My Athletes" },
+  { href: "/portal/record", icon: "ti-calendar", label: "My Calendar" },
+  { href: "/portal/recorded", icon: "ti-list", label: "Recorded Data" },
+  { href: "/portal/time-loss", icon: "ti-clock-edit", label: "Edit Time Loss" },
+  { href: "/portal/reports", icon: "ti-file-report", label: "Reports" },
+  { href: "/portal/codes", icon: "ti-list-numbers", label: "Codes Reference" },
+  { href: "/portal/profile", icon: "ti-user", label: "My Profile" },
 ];
 
 export default function PortalNavbar({
@@ -28,7 +26,6 @@ export default function PortalNavbar({
   eventName?: string;
 }) {
   const pathname = usePathname();
-  const { t } = useLanguage();
 
   return (
     <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-white/60 bg-white/70 px-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] backdrop-blur-xl">
@@ -37,7 +34,7 @@ export default function PortalNavbar({
           <BrandLogo logoUrl={logoUrl} alt={eventName} size={36} className="h-9 w-9 object-contain" />
         </div>
         <div className="text-sm font-medium leading-tight text-slate-800">
-          {t("brand.portalName")}
+          Injuries and Illness
           <span className="block text-[11px] font-normal text-brand-red/80">{npc ?? "Team"}</span>
         </div>
       </Link>
@@ -48,14 +45,13 @@ export default function PortalNavbar({
             key={item.href}
             href={item.href}
             icon={item.icon}
-            label={t(item.key)}
+            label={item.label}
             active={pathname === item.href}
           />
         ))}
       </div>
 
       <div className="flex items-center gap-3">
-        <LanguageToggle />
         <LogoutButton variant="navbar" callbackUrl="/portal/login" />
       </div>
     </div>

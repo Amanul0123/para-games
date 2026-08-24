@@ -76,6 +76,19 @@ export async function POST(request: Request) {
     },
   });
 
+  const athletes = (parsed.data.athletes ?? []).filter((a) => a.name && a.accreditationNo);
+  if (athletes.length > 0) {
+    await prisma.athlete.createMany({
+      data: athletes.map((a) => ({
+        teamUserId: team.id,
+        name: a.name,
+        accreditationNo: a.accreditationNo,
+        sport: a.sport,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
   const { eventName } = await getEventSettings();
   const { subject, html } = buildTeamInviteEmail(team.npc, team.email, tempPassword, eventName);
   void sendEmail({ to: team.email, subject, html });

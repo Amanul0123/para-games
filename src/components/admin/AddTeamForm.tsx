@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { teamCreateSchema, type TeamCreateInput } from "@/lib/validations";
 import { NPC_OPTIONS } from "@/lib/npcFlags";
@@ -21,12 +21,16 @@ export default function AddTeamForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<TeamCreateInput>({
     resolver: zodResolver(teamCreateSchema),
+    defaultValues: { athletes: [] },
   });
+
+  const { fields, append, remove } = useFieldArray({ control, name: "athletes" });
 
   const onSubmit = async (data: TeamCreateInput) => {
     setError(null);
@@ -43,7 +47,7 @@ export default function AddTeamForm() {
         throw new Error(body?.error ?? "Failed to create team");
       }
       setCreated({ npc: data.npc, email: data.email, tempPassword: body.tempPassword });
-      reset();
+      reset({ athletes: [] });
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -124,6 +128,51 @@ export default function AddTeamForm() {
             className="w-full rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
           />
         </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-xs font-medium text-slate-600">Athlete Roster (optional)</label>
+          <button
+            type="button"
+            onClick={() => append({ name: "", accreditationNo: "", sport: "" })}
+            className="flex items-center gap-1 text-xs text-brand-cyan hover:underline"
+          >
+            <i className="ti ti-plus" aria-hidden="true" />
+            Add Athlete
+          </button>
+        </div>
+        {fields.length > 0 && (
+          <div className="space-y-2">
+            {fields.map((field, index) => (
+              <div key={field.id} className="grid grid-cols-1 gap-2 sm:grid-cols-[2fr_1.5fr_1.5fr_auto]">
+                <input
+                  placeholder="Athlete name"
+                  {...register(`athletes.${index}.name` as const)}
+                  className="w-full rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+                />
+                <input
+                  placeholder="Accreditation No."
+                  {...register(`athletes.${index}.accreditationNo` as const)}
+                  className="w-full rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+                />
+                <input
+                  placeholder="Sport (optional)"
+                  {...register(`athletes.${index}.sport` as const)}
+                  className="w-full rounded-md border border-slate-200 bg-white/80 px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="rounded-md border border-slate-200 px-2.5 py-1.5 text-xs text-slate-500 hover:bg-slate-50"
+                  aria-label="Remove athlete"
+                >
+                  <i className="ti ti-trash" aria-hidden="true" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {error && <p className="mt-3 text-xs text-red-600">{error}</p>}

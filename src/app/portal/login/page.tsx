@@ -1,7 +1,6 @@
 import BrandLogo from "@/components/BrandLogo";
 import PortalLoginForm from "@/components/portal/PortalLoginForm";
 import LoginSubtitle from "@/components/LoginSubtitle";
-import LanguageToggle from "@/components/LanguageToggle";
 import { getEventSettings } from "@/lib/eventSettings";
 
 export const dynamic = "force-dynamic";
@@ -34,9 +33,6 @@ export default async function PortalLoginPage() {
         />
 
         <div className="relative z-10 w-full max-w-sm">
-          <div className="mb-3 flex justify-end">
-            <LanguageToggle />
-          </div>
           <div className="relative overflow-hidden rounded-2xl border border-white/80 bg-white/60 shadow-[0_20px_60px_-10px_rgba(15,23,42,0.25)] backdrop-blur-2xl">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
             <div
@@ -49,7 +45,7 @@ export default async function PortalLoginPage() {
                 <BrandLogo logoUrl={logoUrl} alt={eventName} />
               </div>
               <h1 className="text-center text-lg font-semibold text-slate-800">
-                Injuries and Illness
+                Injuries and Illness Surveillance Portal
               </h1>
               <LoginSubtitle eventName={eventName} variant="team" />
             </div>

@@ -6,11 +6,9 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations";
-import { useLanguage } from "@/context/LanguageContext";
 
 export default function AdminLoginForm() {
   const router = useRouter();
-  const { t } = useLanguage();
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,7 +28,7 @@ export default function AdminLoginForm() {
     });
 
     if (res?.error) {
-      setError(t("login.invalidCredentials"));
+      setError("Invalid email or password");
       return;
     }
 
@@ -41,7 +39,7 @@ export default function AdminLoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-4 px-8 py-8">
       <div>
         <label htmlFor="email" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
-          {t("login.email")}
+          Email
         </label>
         <div className="relative">
           <i
@@ -72,7 +70,7 @@ export default function AdminLoginForm() {
 
       <div>
         <label htmlFor="password" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
-          {t("login.password")}
+          Password
         </label>
         <div className="relative">
           <i
@@ -120,7 +118,7 @@ export default function AdminLoginForm() {
         disabled={isSubmitting}
         className="w-full rounded-lg bg-gradient-to-r from-brand-cyan to-cyan-400 py-2.5 text-sm font-medium text-white shadow-[0_10px_25px_-5px_rgba(0,188,212,0.5)] transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {isSubmitting ? t("login.loggingIn") : t("login.button")}
+        {isSubmitting ? "Logging in..." : "Login"}
       </button>
     </form>
   );

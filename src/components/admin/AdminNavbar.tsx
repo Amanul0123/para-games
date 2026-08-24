@@ -4,15 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/admin/LogoutButton";
 import BrandLogo from "@/components/BrandLogo";
-import LanguageToggle from "@/components/LanguageToggle";
-import { useLanguage } from "@/context/LanguageContext";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", icon: "ti-layout-dashboard", key: "nav.dashboard" as const },
-  { href: "/admin/teams", icon: "ti-flag", key: "nav.teams" as const },
-  { href: "/admin/athletes", icon: "ti-users", key: "nav.athletes" as const },
-  { href: "/admin/analytics", icon: "ti-chart-bar", key: "nav.analytics" as const },
-  { href: "/admin/settings", icon: "ti-settings", key: "nav.settings" as const },
+  { href: "/admin/dashboard", icon: "ti-layout-dashboard", label: "Dashboard" },
+  { href: "/admin/teams", icon: "ti-flag", label: "Teams" },
+  { href: "/admin/athletes", icon: "ti-users", label: "Athletes" },
+  { href: "/admin/analytics", icon: "ti-chart-bar", label: "Analytics" },
+  { href: "/admin/settings", icon: "ti-settings", label: "Settings" },
 ];
 
 export default function AdminNavbar({
@@ -23,7 +21,6 @@ export default function AdminNavbar({
   logoUrl?: string | null;
 }) {
   const pathname = usePathname();
-  const { t } = useLanguage();
 
   return (
     <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-white/60 bg-white/70 px-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] backdrop-blur-xl">
@@ -32,7 +29,7 @@ export default function AdminNavbar({
           <BrandLogo logoUrl={logoUrl} alt={eventName} size={36} className="h-9 w-9 object-contain" />
         </div>
         <div className="text-sm font-medium leading-tight text-slate-800">
-          {t("brand.portalName")}
+          Injuries and Illness
           <span className="block text-[11px] font-normal text-brand-red/80">{eventName}</span>
         </div>
       </Link>
@@ -43,14 +40,13 @@ export default function AdminNavbar({
             key={item.href}
             href={item.href}
             icon={item.icon}
-            label={t(item.key)}
+            label={item.label}
             active={pathname === item.href}
           />
         ))}
       </div>
 
       <div className="flex items-center gap-3">
-        <LanguageToggle />
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-red to-orange-500 text-xs font-medium text-white shadow-[0_4px_10px_rgba(224,58,24,0.35)]">
           AD
         </div>

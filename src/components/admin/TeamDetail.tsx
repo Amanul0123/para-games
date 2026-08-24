@@ -1,17 +1,30 @@
+"use client";
+
+import { useState } from "react";
 import { AthleteEntry, InjuryRecord, IllnessRecord } from "@/types";
 import RecordStatusPanel from "@/components/admin/RecordStatusPanel";
 import RecordNotes from "@/components/admin/RecordNotes";
+import AddAthleteForm from "@/components/admin/AddAthleteForm";
 
 interface TeamDetailProps {
+  teamId: string;
   athletes: AthleteEntry[];
   injuries: InjuryRecord[];
   illnesses: IllnessRecord[];
 }
 
-export default function TeamDetail({ athletes, injuries, illnesses }: TeamDetailProps) {
+export default function TeamDetail({ teamId, athletes: initialAthletes, injuries, illnesses }: TeamDetailProps) {
+  const [athletes, setAthletes] = useState(initialAthletes);
+
   return (
     <div className="space-y-6">
       <Section title="Athlete Roster" icon="ti-users">
+        <AddAthleteForm
+          teamId={teamId}
+          onAdded={(athlete) =>
+            setAthletes((prev) => [...prev, athlete].sort((a, b) => a.name.localeCompare(b.name)))
+          }
+        />
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50/60 text-left">

@@ -2,13 +2,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import RecordedDataView from "@/components/portal/RecordedDataView";
+import { AthleteEntry, InjuryRecord, IllnessRecord } from "@/types";
 
 export default async function PortalRecordedPage() {
   const session = await getServerSession(authOptions);
   const teamUserId = (session?.user as { id?: string } | undefined)?.id;
 
-  const [injuries, illnesses] = teamUserId
+  const [athletes, injuries, illnesses] = teamUserId
     ? await Promise.all([
+        prisma.athlete.findMany({
+          where: { teamUserId, archived: false },
+          orderBy: { name: "asc" },
+        }),
         prisma.injury.findMany({
           where: { teamUserId },
           include: { athlete: true },
@@ -20,28 +25,47 @@ export default async function PortalRecordedPage() {
           orderBy: { createdAt: "desc" },
         }),
       ])
-    : [[], []];
+    : [[], [], []];
 
-  const injuryRows = injuries.map((i) => ({
-    id: i.id,
-    athleteName: i.athlete.name,
-    date: i.injuryDate.toISOString().slice(0, 10),
-    bodyPart: i.bodyPart,
-    injuryType: i.injuryType,
-    causeOfInjury: i.causeOfInjury,
-    daysLost: i.editedDaysLost ?? i.originalDaysLost ?? "—",
-    status: i.status,
+  const athleteData: AthleteEntry[] = athletes.map((a) => ({
+    id: a.id,
+    name: a.name,
+    accreditationNo: a.accreditationNo,
+    sport: a.sport,
+    archived: a.archived,
   }));
 
-  const illnessRows = illnesses.map((i) => ({
+  const injuryRecords: InjuryRecord[] = injuries.map((i) => ({
     id: i.id,
+    athleteId: i.athleteId,
     athleteName: i.athlete.name,
-    date: i.occurredOn.toISOString().slice(0, 10),
+    sportEvent: i.sportEvent,
+    injuryDate: i.injuryDate.toISOString().slice(0, 10),
+    bodyPart: i.bodyPart,
+    injuryType: i.injuryType,
+    causeOfInjury: i.causeOfInjury ?? undefined,
+    originalDaysLost: i.originalDaysLost ?? undefined,
+    editedDaysLost: i.editedDaysLost,
+    timeLossStatus: i.timeLossStatus as InjuryRecord["timeLossStatus"],
+    status: i.status as InjuryRecord["status"],
+    createdAt: i.createdAt.toISOString(),
+  }));
+
+  const illnessRecords: IllnessRecord[] = illnesses.map((i) => ({
+    id: i.id,
+    athleteId: i.athleteId,
+    athleteName: i.athlete.name,
+    sportEvent: i.sportEvent,
+    occurredOn: i.occurredOn.toISOString().slice(0, 10),
     diagnosis: i.diagnosis,
-    affectedSystem: i.affectedSystem,
-    causeOfIllness: i.causeOfIllness,
-    daysLost: i.editedDaysLost ?? i.originalDaysLost ?? "—",
-    status: i.status,
+    affectedSystem: i.affectedSystem ?? undefined,
+    mainSymptoms: i.mainSymptoms ?? undefined,
+    causeOfIllness: i.causeOfIllness ?? undefined,
+    originalDaysLost: i.originalDaysLost ?? undefined,
+    editedDaysLost: i.editedDaysLost,
+    timeLossStatus: i.timeLossStatus as IllnessRecord["timeLossStatus"],
+    status: i.status as IllnessRecord["status"],
+    createdAt: i.createdAt.toISOString(),
   }));
 
   return (
@@ -51,7 +75,7 @@ export default async function PortalRecordedPage() {
         <p className="mt-0.5 text-[13px] text-slate-500">Everything your team has recorded so far</p>
       </div>
 
-      <RecordedDataView injuries={injuryRows} illnesses={illnessRows} />
+      <RecordedDataView athletes={athleteData} injuries={injuryRecords} illnesses={illnessRecords} />
     </div>
   );
 }

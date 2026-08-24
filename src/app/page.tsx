@@ -1,6 +1,5 @@
 import BrandLogo from "@/components/BrandLogo";
 import LandingButtons from "@/components/LandingButtons";
-import LanguageToggle from "@/components/LanguageToggle";
 import { getEventSettings } from "@/lib/eventSettings";
 
 export default async function HomePage() {
@@ -18,9 +17,6 @@ export default async function HomePage() {
       />
 
       <div className="relative z-10 w-full max-w-sm text-center">
-        <div className="mb-3 flex justify-end">
-          <LanguageToggle />
-        </div>
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-[0_10px_25px_-5px_rgba(224,58,24,0.5)]">
           <BrandLogo logoUrl={logoUrl} alt={eventName} />
         </div>

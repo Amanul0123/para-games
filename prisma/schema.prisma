@@ -41,11 +41,12 @@ model Athlete {
 }
 
 model TeamDay {
-  id         String   @id @default(uuid())
-  teamUserId String
-  teamUser   TeamUser @relation(fields: [teamUserId], references: [id])
-  date       DateTime @db.Date
-  createdAt  DateTime @default(now())
+  id                 String   @id @default(uuid())
+  teamUserId         String
+  teamUser           TeamUser @relation(fields: [teamUserId], references: [id])
+  date               DateTime @db.Date
+  noIncidentReported Boolean  @default(false)
+  createdAt          DateTime @default(now())
 
   athletes TeamDayAthlete[]
 

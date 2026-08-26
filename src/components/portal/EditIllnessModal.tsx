@@ -21,6 +21,7 @@ export default function EditIllnessModal({
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<IllnessEditInput>({
@@ -30,6 +31,7 @@ export default function EditIllnessModal({
       sportEvent: record.sportEvent,
       diagnosis: record.diagnosis,
       affectedSystem: record.affectedSystem ?? "",
+      mainSymptoms: record.mainSymptoms ?? "",
       causeOfIllness: record.causeOfIllness ?? "",
       originalDaysLost: record.originalDaysLost,
     },
@@ -40,9 +42,11 @@ export default function EditIllnessModal({
   );
 
   const toggleSymptom = (label: string) => {
-    setSelectedSymptoms((prev) =>
-      prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label]
-    );
+    setSelectedSymptoms((prev) => {
+      const next = prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label];
+      setValue("mainSymptoms", next.join(", "), { shouldValidate: true });
+      return next;
+    });
   };
 
   const onSubmit = async (data: IllnessEditInput) => {
@@ -50,10 +54,7 @@ export default function EditIllnessModal({
       const res = await fetch(`/api/portal/records/illness/${record.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          mainSymptoms: selectedSymptoms.length ? selectedSymptoms.join(", ") : undefined,
-        }),
+        body: JSON.stringify(data),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
@@ -105,12 +106,14 @@ export default function EditIllnessModal({
                 className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
               />
             </Field>
-            <Field label="Affected System (optional)">
+            <Field label="Affected System" error={errors.affectedSystem?.message}>
               <select
                 {...register("affectedSystem")}
                 className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
               >
-                <option value="">Select system (optional)</option>
+                <option value="" disabled>
+                  Select system
+                </option>
                 {AFFECTED_SYSTEMS.map((s) => (
                   <option key={s.code} value={s.label}>
                     {s.code} — {s.label}
@@ -118,12 +121,14 @@ export default function EditIllnessModal({
                 ))}
               </select>
             </Field>
-            <Field label="Cause (optional)">
+            <Field label="Cause" error={errors.causeOfIllness?.message}>
               <select
                 {...register("causeOfIllness")}
                 className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
               >
-                <option value="">Select cause (optional)</option>
+                <option value="" disabled>
+                  Select cause
+                </option>
                 {ILLNESS_CAUSES.map((c) => (
                   <option key={c.code} value={c.label}>
                     {c.code} — {c.label}
@@ -131,7 +136,7 @@ export default function EditIllnessModal({
                 ))}
               </select>
             </Field>
-            <Field label="Days Lost (optional)">
+            <Field label="Days Lost" error={errors.originalDaysLost?.message}>
               <input
                 type="number"
                 min={0}
@@ -142,7 +147,7 @@ export default function EditIllnessModal({
               />
             </Field>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs font-medium text-slate-600">Main Symptom(s) (optional)</label>
+              <label className="mb-1 block text-xs font-medium text-slate-600">Main Symptom(s)</label>
               <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 rounded-md border border-slate-200 bg-white p-2.5 sm:grid-cols-3">
                 {MAIN_SYMPTOMS.map((s) => (
                   <label key={s.code} className="flex items-center gap-1.5 text-sm text-slate-700">
@@ -156,6 +161,9 @@ export default function EditIllnessModal({
                   </label>
                 ))}
               </div>
+              {errors.mainSymptoms && (
+                <p className="mt-1 text-xs text-red-500">{errors.mainSymptoms.message}</p>
+              )}
             </div>
           </div>
 

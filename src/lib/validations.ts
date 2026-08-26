@@ -77,6 +77,13 @@ export const teamDaySchema = z.object({
 
 export type TeamDayInput = z.infer<typeof teamDaySchema>;
 
+export const noIncidentSchema = z.object({
+  date: z.string().min(1, "Date is required"),
+  noIncidentReported: z.boolean(),
+});
+
+export type NoIncidentInput = z.infer<typeof noIncidentSchema>;
+
 // --- Portal: injury / illness recording ---
 
 export const injurySchema = z.object({
@@ -85,8 +92,8 @@ export const injurySchema = z.object({
   injuryDate: z.string().min(1, "Injury date is required"),
   bodyPart: z.string().min(1, "Body part is required"),
   injuryType: z.string().min(1, "Injury type is required"),
-  causeOfInjury: z.string().optional(),
-  originalDaysLost: z.number().optional(),
+  causeOfInjury: z.string({ error: "Cause of injury is required" }).min(1, "Cause of injury is required"),
+  originalDaysLost: z.number({ error: "Days lost is required" }).min(0, "Days lost must be 0 or more"),
 });
 
 export type InjuryInput = z.infer<typeof injurySchema>;
@@ -99,10 +106,10 @@ export const illnessSchema = z.object({
   sportEvent: z.string().min(1, "Sport / event is required"),
   occurredOn: z.string().min(1, "Occurred on date is required"),
   diagnosis: z.string().min(1, "Diagnosis is required"),
-  affectedSystem: z.string().optional(),
-  mainSymptoms: z.string().optional(),
-  causeOfIllness: z.string().optional(),
-  originalDaysLost: z.number().optional(),
+  affectedSystem: z.string({ error: "Affected system is required" }).min(1, "Affected system is required"),
+  mainSymptoms: z.string({ error: "At least one symptom is required" }).min(1, "At least one symptom is required"),
+  causeOfIllness: z.string({ error: "Cause of illness is required" }).min(1, "Cause of illness is required"),
+  originalDaysLost: z.number({ error: "Days lost is required" }).min(0, "Days lost must be 0 or more"),
 });
 
 export type IllnessInput = z.infer<typeof illnessSchema>;

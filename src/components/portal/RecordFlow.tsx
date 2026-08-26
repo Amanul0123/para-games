@@ -20,6 +20,8 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
   const [dayInjuries, setDayInjuries] = useState<InjuryRecord[]>([]);
   const [dayIllnesses, setDayIllnesses] = useState<IllnessRecord[]>([]);
   const [activeForm, setActiveForm] = useState<ActiveForm>(null);
+  const [noIncidentReported, setNoIncidentReported] = useState(false);
+  const [savingNoIncident, setSavingNoIncident] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,6 +34,7 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
       if (cancelled) return;
       setTeamSizeSet(!!teamDay.exists);
       setSelectedAthleteIds(teamDay.athleteIds ?? []);
+      setNoIncidentReported(!!teamDay.noIncidentReported);
       setDayInjuries(Array.isArray(injuries) ? injuries : []);
       setDayIllnesses(Array.isArray(illnesses) ? illnesses : []);
       setLoading(false);
@@ -41,6 +44,23 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
       cancelled = true;
     };
   }, [date]);
+
+  const setNoIncident = async (value: boolean) => {
+    setSavingNoIncident(true);
+    try {
+      const res = await fetch("/api/portal/team-day", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date, noIncidentReported: value }),
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      setNoIncidentReported(value);
+    } catch {
+      alert("Failed to save. Please try again.");
+    } finally {
+      setSavingNoIncident(false);
+    }
+  };
 
   const dayAthletes = athletes.filter((a) => selectedAthleteIds.includes(a.id));
 
@@ -90,33 +110,54 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
             </button>
           </div>
 
-          {activeForm === null && (
-            <div className="flex flex-wrap gap-2">
+          {noIncidentReported ? (
+            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+              <i className="ti ti-circle-check" aria-hidden="true" />
+              No injury or illness reported for {date}.
               <button
                 type="button"
-                onClick={() => setActiveForm(null)}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                disabled={savingNoIncident}
+                onClick={() => setNoIncident(false)}
+                className="ml-auto text-xs underline disabled:opacity-50"
               >
-                No Injury / Illness Today
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveForm("injury")}
-                className="rounded-lg bg-brand-red px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
-              >
-                Record Injury
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveForm("illness")}
-                className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
-              >
-                Record Illness
+                Undo
               </button>
             </div>
+          ) : (
+            activeForm === null && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={savingNoIncident || dayInjuries.length > 0 || dayIllnesses.length > 0}
+                  onClick={() => setNoIncident(true)}
+                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                  title={
+                    dayInjuries.length > 0 || dayIllnesses.length > 0
+                      ? "Records already exist for this date"
+                      : undefined
+                  }
+                >
+                  {savingNoIncident ? "Saving..." : "No Injury / Illness Today"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveForm("injury")}
+                  className="rounded-lg bg-brand-red px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                >
+                  Record Injury
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveForm("illness")}
+                  className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+                >
+                  Record Illness
+                </button>
+              </div>
+            )
           )}
 
-          {activeForm === "injury" && (
+          {!noIncidentReported && activeForm === "injury" && (
             <InjuryEntryForm
               date={date}
               athletes={dayAthletes}
@@ -128,7 +169,7 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
             />
           )}
 
-          {activeForm === "illness" && (
+          {!noIncidentReported && activeForm === "illness" && (
             <IllnessEntryForm
               date={date}
               athletes={dayAthletes}

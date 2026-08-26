@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { teamDaySchema } from "@/lib/validations";
+import { teamDaySchema, noIncidentSchema } from "@/lib/validations";
 
 async function requireTeam() {
   const session = await getServerSession(authOptions);
@@ -36,6 +36,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     exists: !!teamDay,
     athleteIds: teamDay?.athletes.map((a) => a.athleteId) ?? [],
+    noIncidentReported: teamDay?.noIncidentReported ?? false,
   });
 }
 
@@ -67,4 +68,34 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ ok: true });
+}
+
+export async function PATCH(request: Request) {
+  const teamUserId = await requireTeam();
+  if (!teamUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const parsed = noIncidentSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const date = parseDate(parsed.data.date);
+
+  const teamDay = await prisma.teamDay.findUnique({ where: { teamUserId_date: { teamUserId, date } } });
+  if (!teamDay) {
+    return NextResponse.json(
+      { error: "Set the Daily Team Size for this date before recording this" },
+      { status: 400 },
+    );
+  }
+
+  await prisma.teamDay.update({
+    where: { id: teamDay.id },
+    data: { noIncidentReported: parsed.data.noIncidentReported },
+  });
+
+  return NextResponse.json({ ok: true, noIncidentReported: parsed.data.noIncidentReported });
 }

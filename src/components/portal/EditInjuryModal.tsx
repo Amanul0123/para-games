@@ -141,12 +141,14 @@ export default function EditInjuryModal({
                 ))}
               </select>
             </Field>
-            <Field label="Cause of Injury (optional)">
+            <Field label="Cause of Injury" error={errors.causeOfInjury?.message}>
               <select
                 {...register("causeOfInjury")}
                 className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-brand-cyan/60 focus:outline-none"
               >
-                <option value="">Select cause (optional)</option>
+                <option value="" disabled>
+                  Select cause
+                </option>
                 {INJURY_CAUSES.map((c) => (
                   <option key={c.code} value={c.label}>
                     {c.code} — {c.label}
@@ -154,7 +156,7 @@ export default function EditInjuryModal({
                 ))}
               </select>
             </Field>
-            <Field label="Days Lost (optional)">
+            <Field label="Days Lost" error={errors.originalDaysLost?.message}>
               <input
                 type="number"
                 min={0}

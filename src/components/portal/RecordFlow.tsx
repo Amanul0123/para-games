@@ -42,6 +42,8 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
     };
   }, [date]);
 
+  const dayAthletes = athletes.filter((a) => selectedAthleteIds.includes(a.id));
+
   return (
     <div className="space-y-5">
       <div className="rounded-xl border border-white/70 bg-white/60 p-4 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.1)] backdrop-blur-xl">
@@ -117,7 +119,7 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
           {activeForm === "injury" && (
             <InjuryEntryForm
               date={date}
-              athletes={athletes}
+              athletes={dayAthletes}
               onCancel={() => setActiveForm(null)}
               onSaved={(record) => {
                 setDayInjuries((prev) => [record, ...prev]);
@@ -129,7 +131,7 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
           {activeForm === "illness" && (
             <IllnessEntryForm
               date={date}
-              athletes={athletes}
+              athletes={dayAthletes}
               onCancel={() => setActiveForm(null)}
               onSaved={(record) => {
                 setDayIllnesses((prev) => [record, ...prev]);

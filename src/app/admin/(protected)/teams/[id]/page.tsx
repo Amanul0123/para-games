@@ -17,6 +17,7 @@ export default async function AdminTeamDetailPage({
       athletes: { orderBy: { name: "asc" } },
       injuries: { include: { athlete: true }, orderBy: { createdAt: "desc" } },
       illnesses: { include: { athlete: true }, orderBy: { createdAt: "desc" } },
+      teamDays: { include: { athletes: true }, orderBy: { date: "desc" } },
     },
   });
 
@@ -70,6 +71,17 @@ export default async function AdminTeamDetailPage({
     notes: notesFor(i.id),
   }));
 
+  const dailyReports = team.teamDays.map((day) => {
+    const dateStr = day.date.toISOString().slice(0, 10);
+    return {
+      date: dateStr,
+      athleteCount: day.athletes.length,
+      noIncidentReported: day.noIncidentReported,
+      injuryCount: team.injuries.filter((i) => i.injuryDate.toISOString().slice(0, 10) === dateStr).length,
+      illnessCount: team.illnesses.filter((i) => i.occurredOn.toISOString().slice(0, 10) === dateStr).length,
+    };
+  });
+
   const illnesses: IllnessRecord[] = team.illnesses.map((ill) => ({
     id: ill.id,
     athleteId: ill.athleteId,
@@ -102,7 +114,13 @@ export default async function AdminTeamDetailPage({
         <p className="mt-1 text-sm text-slate-500">{team.email}</p>
       </div>
 
-      <TeamDetail teamId={team.id} athletes={athletes} injuries={injuries} illnesses={illnesses} />
+      <TeamDetail
+        teamId={team.id}
+        athletes={athletes}
+        injuries={injuries}
+        illnesses={illnesses}
+        dailyReports={dailyReports}
+      />
     </div>
   );
 }

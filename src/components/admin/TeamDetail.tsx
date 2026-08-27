@@ -6,18 +6,76 @@ import RecordStatusPanel from "@/components/admin/RecordStatusPanel";
 import RecordNotes from "@/components/admin/RecordNotes";
 import AddAthleteForm from "@/components/admin/AddAthleteForm";
 
+interface DailyReport {
+  date: string;
+  athleteCount: number;
+  noIncidentReported: boolean;
+  injuryCount: number;
+  illnessCount: number;
+}
+
 interface TeamDetailProps {
   teamId: string;
   athletes: AthleteEntry[];
   injuries: InjuryRecord[];
   illnesses: IllnessRecord[];
+  dailyReports: DailyReport[];
 }
 
-export default function TeamDetail({ teamId, athletes: initialAthletes, injuries, illnesses }: TeamDetailProps) {
+export default function TeamDetail({
+  teamId,
+  athletes: initialAthletes,
+  injuries,
+  illnesses,
+  dailyReports,
+}: TeamDetailProps) {
   const [athletes, setAthletes] = useState(initialAthletes);
 
   return (
     <div className="space-y-6">
+      <Section title="Daily Reporting" icon="ti-calendar-stats">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-50/60 text-left">
+              <Th>Date</Th>
+              <Th>Athletes Present</Th>
+              <Th>Status</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {dailyReports.map((d) => (
+              <tr key={d.date} className="border-t border-slate-200/70">
+                <td className="px-4 py-2.5 text-xs text-slate-500">{d.date}</td>
+                <td className="px-4 py-2.5 text-slate-600">{d.athleteCount}</td>
+                <td className="px-4 py-2.5">
+                  {d.noIncidentReported ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-600">
+                      <i className="ti ti-circle-check text-[11px]" aria-hidden="true" />
+                      No injury or illness reported
+                    </span>
+                  ) : d.injuryCount > 0 || d.illnessCount > 0 ? (
+                    <span className="text-slate-600">
+                      {d.injuryCount > 0 && `${d.injuryCount} ${d.injuryCount > 1 ? "injuries" : "injury"}`}
+                      {d.injuryCount > 0 && d.illnessCount > 0 && ", "}
+                      {d.illnessCount > 0 && `${d.illnessCount} ${d.illnessCount > 1 ? "illnesses" : "illness"}`}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-slate-400">Not yet declared</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {dailyReports.length === 0 && (
+              <tr>
+                <td colSpan={3} className="px-4 py-6 text-center text-sm text-slate-500">
+                  No daily team size recorded yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </Section>
+
       <Section title="Athlete Roster" icon="ti-users">
         <AddAthleteForm
           teamId={teamId}

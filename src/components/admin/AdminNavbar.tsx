@@ -8,6 +8,7 @@ import BrandLogo from "@/components/BrandLogo";
 const NAV_ITEMS = [
   { href: "/admin/dashboard", icon: "ti-layout-dashboard", label: "Dashboard" },
   { href: "/admin/teams", icon: "ti-flag", label: "Teams" },
+  { href: "/admin/reports", icon: "ti-calendar-stats", label: "Daily Reports" },
   { href: "/admin/athletes", icon: "ti-users", label: "Athletes" },
   { href: "/admin/analytics", icon: "ti-chart-bar", label: "Analytics" },
   { href: "/admin/settings", icon: "ti-settings", label: "Settings" },

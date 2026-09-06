@@ -130,7 +130,7 @@ export default function RecordFlow({ athletes }: { athletes: AthleteEntry[] }) {
                   type="button"
                   disabled={savingNoIncident || dayInjuries.length > 0 || dayIllnesses.length > 0}
                   onClick={() => setNoIncident(true)}
-                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                  className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 disabled:opacity-50"
                   title={
                     dayInjuries.length > 0 || dayIllnesses.length > 0
                       ? "Records already exist for this date"
